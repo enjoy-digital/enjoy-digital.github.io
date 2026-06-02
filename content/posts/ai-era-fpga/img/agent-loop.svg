@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 560" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .paper { fill:#171814; }
+      .t     { fill:#ffffff; font-size:15px; font-weight:700; }
+      .sub   { fill:#9aa09a; font-size:11px; }
+      .cyan  { fill:#2EAADC; font-size:13px; font-weight:700; }
+      .lbl   { fill:#cfd2cc; font-size:12.5px; }
+      .ring  { fill:none; stroke:#2EAADC; stroke-width:2; marker-end:url(#a); }
+      .feed  { fill:none; stroke:#22d3ee; stroke-width:2; stroke-dasharray:5 4; marker-end:url(#a); }
+    </style>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#2EAADC"/>
+    </marker>
+  </defs>
+
+  <rect class="paper" x="0" y="0" width="920" height="560"/>
+  <text class="t" x="460" y="30" text-anchor="middle" fill="#2EAADC">The agent loop: goal in, working design out</text>
+
+  <!-- human input -->
+  <rect x="30" y="60" width="230" height="86" rx="10" fill="#102a33" stroke="#22d3ee" stroke-width="2"/>
+  <text class="cyan" x="145" y="88" text-anchor="middle">You</text>
+  <text class="sub"  x="145" y="108" text-anchor="middle">high-level goal + spec</text>
+  <text class="sub"  x="145" y="126" text-anchor="middle">+ the board on the bench</text>
+
+  <!-- the 5 loop stages, arranged in a cycle -->
+  <!-- write HDL -->
+  <rect x="330" y="70"  width="180" height="56" rx="10" fill="#1e1f1b" stroke="#2EAADC"/>
+  <text class="lbl" x="420" y="95"  text-anchor="middle">1. write HDL / SoC</text>
+  <text class="sub" x="420" y="113" text-anchor="middle">LiteX + Migen, in Python</text>
+  <!-- simulate -->
+  <rect x="560" y="70"  width="180" height="56" rx="10" fill="#1e1f1b" stroke="#2EAADC"/>
+  <text class="lbl" x="650" y="95"  text-anchor="middle">2. simulate</text>
+  <text class="sub" x="650" y="113" text-anchor="middle">pytest / Verilator</text>
+  <!-- build + load -->
+  <rect x="700" y="200" width="180" height="56" rx="10" fill="#1e1f1b" stroke="#2EAADC"/>
+  <text class="lbl" x="790" y="225" text-anchor="middle">3. build + load</text>
+  <text class="sub" x="790" y="243" text-anchor="middle">--build --load</text>
+  <!-- test over bridge -->
+  <rect x="560" y="330" width="200" height="56" rx="10" fill="#1e1f1b" stroke="#2EAADC"/>
+  <text class="lbl" x="660" y="355" text-anchor="middle">4. test on hardware</text>
+  <text class="sub" x="660" y="373" text-anchor="middle">over Etherbone / PCIe / UART</text>
+  <!-- observe / litescope -->
+  <rect x="300" y="330" width="210" height="56" rx="10" fill="#1e1f1b" stroke="#2EAADC"/>
+  <text class="lbl" x="405" y="355" text-anchor="middle">5. observe</text>
+  <text class="sub" x="405" y="373" text-anchor="middle">CSR reads · LiteScope capture</text>
+
+  <!-- ring arrows -->
+  <line class="ring" x1="510" y1="98"  x2="556" y2="98"/>
+  <path class="ring" d="M740,104 C800,120 805,170 793,196"/>
+  <path class="ring" d="M778,256 C760,300 720,316 700,326"/>
+  <line class="ring" x1="558" y1="358" x2="514" y2="358"/>
+  <!-- feedback: observe -> write HDL (add probe / fix) -->
+  <path class="feed" d="M360,330 C300,250 320,150 326,128"/>
+  <text class="cyan" x="250" y="250" text-anchor="middle" transform="rotate(-78 250 250)">add CSR / probe, fix, retry</text>
+
+  <!-- you -> write HDL -->
+  <line class="ring" x1="260" y1="100" x2="326" y2="98"/>
+
+  <!-- done out -->
+  <rect x="300" y="450" width="320" height="56" rx="10" fill="#102a33" stroke="#22d3ee" stroke-width="2"/>
+  <text class="cyan" x="460" y="475" text-anchor="middle">working / debugged design</text>
+  <text class="sub"  x="460" y="493" text-anchor="middle">+ a regression test that locks the fix in</text>
+  <path class="ring" d="M460,388 L460,448"/>
+
+  <text class="sub" x="460" y="534" text-anchor="middle">Most of the loop runs unattended. You step in only when it clearly loses the thread.</text>
+</svg>
