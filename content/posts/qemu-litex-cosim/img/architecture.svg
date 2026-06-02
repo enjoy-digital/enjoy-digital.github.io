@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 420" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .paper { fill:#171814; }
+      .box   { fill:#1e1f1b; stroke:#2EAADC; stroke-width:2; rx:10; }
+      .boxq  { fill:#1e1f1b; stroke:#22d3ee; stroke-width:2; rx:10; }
+      .title { fill:#ffffff; font-size:18px; font-weight:700; }
+      .sub   { fill:#9aa09a; font-size:12px; }
+      .cyan  { fill:#2EAADC; font-size:13px; font-weight:700; }
+      .lbl   { fill:#cfd2cc; font-size:13px; }
+      .pin   { stroke:#2EAADC; stroke-width:2; fill:none; }
+      .arr   { stroke:#2EAADC; stroke-width:2.5; fill:none; marker-end:url(#a); }
+    </style>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#2EAADC"/>
+    </marker>
+  </defs>
+
+  <rect class="paper" x="0" y="0" width="880" height="420"/>
+
+  <!-- QEMU side -->
+  <rect class="boxq" x="30" y="60" width="300" height="300" rx="12"/>
+  <text class="title" x="60" y="92">QEMU  (litex-sim machine)</text>
+  <text class="sub"   x="60" y="112">runs the CPU at native speed</text>
+  <rect x="60" y="130" width="240" height="40" rx="8" fill="#14323f" stroke="#22d3ee"/>
+  <text class="lbl" x="75" y="155">RISC-V CPU  (rv32 / rv64)</text>
+  <rect x="60" y="180" width="240" height="34" rx="8" fill="#14323f" stroke="#22d3ee"/>
+  <text class="lbl" x="75" y="202">ROM / RAM  (local)</text>
+  <rect x="60" y="224" width="240" height="34" rx="8" fill="#14323f" stroke="#22d3ee"/>
+  <text class="lbl" x="75" y="246">ACLINT / CLINT  +  PLIC</text>
+  <rect x="60" y="270" width="240" height="34" rx="8" fill="#102a33" stroke="#2EAADC"/>
+  <text class="cyan" x="75" y="292">MMIO window  →  bridge</text>
+
+  <!-- bridge -->
+  <line class="arr" x1="330" y1="287" x2="548" y2="287"/>
+  <line class="arr" x1="548" y1="315" x2="332" y2="315"/>
+  <text class="cyan" x="360" y="278">read / write</text>
+  <text class="sub"  x="360" y="335">32-byte TCP request / response</text>
+  <text class="lbl"  x="392" y="200" text-anchor="middle">TCP</text>
+  <text class="lbl"  x="440" y="200" text-anchor="middle">:1235</text>
+  <text class="cyan" x="440" y="170" text-anchor="middle">co-sim bridge</text>
+
+  <!-- Verilator side -->
+  <rect class="box" x="550" y="60" width="300" height="300" rx="12"/>
+  <text class="title" x="580" y="92">Verilator  (LiteX SoC)</text>
+  <text class="sub"   x="580" y="112">cycle-accurate peripherals</text>
+  <rect x="580" y="130" width="240" height="34" rx="8" fill="#102a33" stroke="#2EAADC"/>
+  <text class="cyan" x="595" y="152">qemu_wishbone  bridge module</text>
+  <rect x="580" y="174" width="240" height="34" rx="8" fill="#1a1b17" stroke="#2EAADC"/>
+  <text class="lbl" x="595" y="196">Wishbone / AXI interconnect</text>
+  <rect x="580" y="218" width="112" height="34" rx="8" fill="#1a1b17" stroke="#2EAADC"/>
+  <text class="lbl" x="595" y="240">UART</text>
+  <rect x="708" y="218" width="112" height="34" rx="8" fill="#1a1b17" stroke="#2EAADC"/>
+  <text class="lbl" x="723" y="240">Ethernet</text>
+  <rect x="580" y="262" width="112" height="34" rx="8" fill="#1a1b17" stroke="#2EAADC"/>
+  <text class="lbl" x="595" y="284">your IP</text>
+  <rect x="708" y="262" width="112" height="34" rx="8" fill="#1a1b17" stroke="#2EAADC"/>
+  <text class="lbl" x="723" y="284">DMA</text>
+  <rect x="580" y="306" width="240" height="34" rx="8" fill="#102a33" stroke="#2EAADC"/>
+  <text class="cyan" x="595" y="328">main_ram  (shared file)  ⇄ QEMU</text>
+
+  <text class="title" x="440" y="36" text-anchor="middle" fill="#2EAADC">QEMU runs the CPU · Verilator runs the SoC</text>
+</svg>
