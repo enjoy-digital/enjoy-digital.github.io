@@ -1,0 +1,38 @@
+# -- Main Menu --
+[[main]]
+  name = "Posts"
+  pageRef = "posts"
+  weight = 10
+
+[[main]]
+  name = "Tags"
+  pageRef = "tags"
+  weight = 20
+
+[[main]]
+  name = "About"
+  pageRef = "about"
+  weight = 30
+
+[[main]]
+  name = "LiteX"
+  url = "https://github.com/enjoy-digital/litex"
+  weight = 40
+  [main.params]
+    icon = "github"
+
+# -- Footer Menu --
+[[footer]]
+  name = "LiteX on GitHub"
+  url = "https://github.com/enjoy-digital/litex"
+  weight = 10
+
+[[footer]]
+  name = "Discord"
+  url = "https://discord.gg/jjL4MpAd"
+  weight = 20
+
+[[footer]]
+  name = "RSS"
+  url = "/index.xml"
+  weight = 30

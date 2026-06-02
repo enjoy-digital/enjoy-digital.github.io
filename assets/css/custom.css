@@ -1,0 +1,88 @@
+/*
+ * LiteX blog: custom tweaks on top of Blowfish + the `litex` color scheme.
+ * Brand accent: #2EAADC. Dark-first, "Build your hardware, easily!".
+ */
+
+/* A touch more LiteX-cyan glow on links inside article bodies. */
+.prose a {
+  text-decoration-color: rgb(var(--color-primary-400));
+  text-underline-offset: 3px;
+}
+.prose a:hover {
+  color: rgb(var(--color-primary-500));
+}
+
+/* Inline code: cyan-tinted, monospace, subtle chip-like background. */
+.prose :not(pre) > code {
+  color: rgb(var(--color-primary-300));
+  background-color: rgba(46, 170, 220, 0.10);
+  border: 1px solid rgba(46, 170, 220, 0.20);
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.35rem;
+  font-weight: 500;
+}
+
+/* Code blocks: deep terminal-like background with a cyan left rule. */
+.prose pre,
+.prose .chroma,
+.highlight pre,
+.highlight .chroma {
+  background-color: #0a0d12 !important;
+}
+.prose pre {
+  border-left: 3px solid rgb(var(--color-primary-500));
+  border-radius: 0.4rem;
+  box-shadow: inset 0 0 0 1px rgba(46, 170, 220, 0.08);
+}
+
+/* Cyan text selection, for the terminal feel. */
+::selection {
+  background: rgba(46, 170, 220, 0.30);
+}
+
+/* Blockquotes / callouts get the LiteX cyan accent bar. */
+.prose blockquote {
+  border-left-color: rgb(var(--color-primary-500));
+}
+
+/* Headings: cyan kicker on h2 to break the article into chip-sections. */
+.prose h2 {
+  border-bottom: 1px solid rgba(46, 170, 220, 0.25);
+  padding-bottom: 0.25rem;
+}
+
+/* Make the homepage hero logo breathe and pop on the dark paper. */
+.litex-hero-logo {
+  max-width: 480px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto 1.25rem auto;
+  display: block;
+  filter: drop-shadow(0 6px 24px rgba(46, 170, 220, 0.25));
+}
+
+/* Tagline under the hero. */
+.litex-tagline {
+  text-align: center;
+  font-size: 1.25rem;
+  color: rgb(var(--color-primary-400));
+  letter-spacing: 0.02em;
+  margin-bottom: 2rem;
+}
+
+/* Tables in articles: readable on dark, cyan header rule. */
+.prose table thead {
+  border-bottom: 2px solid rgb(var(--color-primary-500));
+}
+
+/* "chip" badge used for little inline labels in posts. */
+.litex-chip {
+  display: inline-block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8rem;
+  color: rgb(var(--color-primary-300));
+  background: rgba(46, 170, 220, 0.10);
+  border: 1px solid rgba(46, 170, 220, 0.30);
+  border-radius: 0.3rem;
+  padding: 0.05rem 0.4rem;
+}

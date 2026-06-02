@@ -1,0 +1,28 @@
+# LiteX blog base Hugo configuration.
+baseURL = "https://enjoy-digital.github.io/"
+defaultContentLanguage = "en"
+title = "LiteX Notes"
+
+theme = "blowfish"
+
+# Pretty URLs + taxonomies.
+enableRobotsTXT = true
+summaryLength = 30
+paginate = 10
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+  series = "series"
+
+[sitemap]
+  changefreq = "weekly"
+  filename = "sitemap.xml"
+  priority = 0.5
+
+[imaging]
+  anchor = "Smart"
+  quality = 85

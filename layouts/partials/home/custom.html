@@ -1,0 +1,24 @@
+{{/* LiteX custom homepage: logo hero + tagline + content + recent posts. */}}
+<article class="flex flex-col items-center justify-center text-center">
+  <header class="relative px-1 py-6 flex flex-col items-center mb-2">
+    {{ with resources.Get "img/litex_logo_hero.png" }}
+      <img
+        class="litex-hero-logo"
+        alt="LiteX: Build your hardware, easily!"
+        src="{{ .RelPermalink }}"
+        width="{{ .Width }}"
+        height="{{ .Height }}">
+    {{ end }}
+    <p class="litex-tagline">Notes from building FPGA SoCs with LiteX.</p>
+    {{ with .Site.Params.Author.headline }}
+      <h2 class="text-lg text-neutral-500 dark:text-neutral-400">{{ . | markdownify }}</h2>
+    {{ end }}
+    <div class="mt-2 text-2xl">
+      {{ partialCached "author-links.html" . }}
+    </div>
+  </header>
+  <section class="prose dark:prose-invert w-full max-w-2xl mx-auto">{{ .Content }}</section>
+</article>
+<section class="mt-6">
+  {{ partial "recent-articles/main.html" . }}
+</section>
