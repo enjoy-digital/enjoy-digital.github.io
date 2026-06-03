@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .paper { fill:#0f1218; }
+      .t     { fill:#ffffff; font-size:15px; font-weight:700; }
+      .sub   { fill:#8e96a2; font-size:11px; }
+      .cyan  { fill:#2EAADC; font-size:13px; font-weight:700; }
+      .lbl   { fill:#cfd2cc; font-size:12px; }
+      .board { fill:#13201a; stroke:#2EAADC; stroke-width:2; }
+      .card  { fill:#102a33; stroke:#22d3ee; stroke-width:2.5; }
+      .io    { fill:#1c2129; stroke:#2EAADC; stroke-width:1.8; }
+      .wire  { stroke:#2EAADC; stroke-width:2; fill:none; }
+    </style>
+  </defs>
+
+  <rect class="paper" x="0" y="0" width="960" height="470"/>
+  <text class="t" x="480" y="30" text-anchor="middle" fill="#2EAADC">On the LiteX Acorn Baseboard Mini</text>
+
+  <!-- baseboard -->
+  <rect class="board" x="250" y="70" width="460" height="330" rx="14"/>
+  <text class="sub" x="480" y="92" text-anchor="middle">Acorn Baseboard Mini</text>
+
+  <!-- the M2SDR card in the M.2 slot -->
+  <rect class="card" x="330" y="180" width="300" height="110" rx="10"/>
+  <text class="cyan" x="480" y="220" text-anchor="middle">M.2 slot</text>
+  <text class="t"    x="480" y="244" text-anchor="middle">LiteX M2SDR</text>
+  <text class="sub"  x="480" y="266" text-anchor="middle">(AD9361 RFIC: TX1/TX2, RX1/RX2 via uFL)</text>
+
+  <!-- IO blocks around the board -->
+  <!-- PCIe x1 (bottom edge) -->
+  <rect class="io" x="360" y="338" width="240" height="40" rx="8"/>
+  <text class="lbl" x="480" y="363" text-anchor="middle">PCIe x1 edge (host)</text>
+  <line class="wire" x1="480" y1="290" x2="480" y2="338"/>
+
+  <!-- SFP0 / SFP1 (left) -->
+  <rect class="io" x="40" y="150" width="180" height="44" rx="8"/>
+  <text class="lbl" x="55" y="170">SFP0  1G / 2.5G</text>
+  <text class="sub" x="55" y="186">Ethernet (1000/2500BaseX)</text>
+  <rect class="io" x="40" y="206" width="180" height="44" rx="8"/>
+  <text class="lbl" x="55" y="226">SFP1  1G / 2.5G</text>
+  <text class="sub" x="55" y="242">White Rabbit / PTP in</text>
+  <line class="wire" x1="220" y1="172" x2="330" y2="205"/>
+  <line class="wire" x1="220" y1="228" x2="330" y2="225"/>
+
+  <!-- SATA (right top) -->
+  <rect class="io" x="740" y="150" width="180" height="44" rx="8"/>
+  <text class="lbl" x="755" y="170">SATA</text>
+  <text class="sub" x="755" y="186">record / replay to SSD</text>
+  <line class="wire" x1="630" y1="205" x2="740" y2="172"/>
+
+  <!-- GPIO PicoEzMate (right mid) -->
+  <rect class="io" x="740" y="206" width="180" height="44" rx="8"/>
+  <text class="lbl" x="755" y="226">2x PicoEzMate</text>
+  <text class="sub" x="755" y="242">GPIO</text>
+  <line class="wire" x1="630" y1="235" x2="740" y2="228"/>
+
+  <!-- USB-C JTAG/UART (top) -->
+  <rect class="io" x="300" y="108" width="170" height="40" rx="8"/>
+  <text class="lbl" x="315" y="133">USB-C: JTAG / UART</text>
+  <line class="wire" x1="385" y1="148" x2="430" y2="180"/>
+  <!-- USB-C power (top) -->
+  <rect class="io" x="490" y="108" width="170" height="40" rx="8"/>
+  <text class="lbl" x="505" y="133">USB-C: power (3.3V)</text>
+  <line class="wire" x1="575" y1="148" x2="530" y2="180"/>
+
+  <text class="sub" x="480" y="430" text-anchor="middle">One M.2 card, full I/O: PCIe to the host, two SFP cages, SATA storage, GPIO, and JTAG/UART + power over USB-C.</text>
+  <text class="sub" x="480" y="450" text-anchor="middle">The baseboard was built around the SQRL Acorn card; the M2SDR uses the same M.2 slot.</text>
+</svg>

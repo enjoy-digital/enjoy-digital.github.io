@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 500" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .paper { fill:#0f1218; }
+      .t     { fill:#ffffff; font-size:15px; font-weight:700; }
+      .sub   { fill:#8e96a2; font-size:11px; }
+      .cyan  { fill:#2EAADC; font-size:13px; font-weight:700; }
+      .lbl   { fill:#cfd2cc; font-size:12.5px; }
+      .rfic  { fill:#102a33; stroke:#22d3ee; stroke-width:2.5; }
+      .fpga  { fill:#1c2129; stroke:#2EAADC; stroke-width:2.5; }
+      .box   { fill:#1a1b17; stroke:#2EAADC; stroke-width:1.8; }
+      .wire  { stroke:#2EAADC; stroke-width:2.2; fill:none; marker-end:url(#a); marker-start:url(#b); }
+      .sync  { fill:#102a33; stroke:#2EAADC; stroke-width:1.8; }
+    </style>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2EAADC"/></marker>
+    <marker id="b" markerWidth="9" markerHeight="9" refX="2" refY="3" orient="auto"><path d="M7,0 L0,3 L7,6 Z" fill="#2EAADC"/></marker>
+  </defs>
+
+  <rect class="paper" x="0" y="0" width="960" height="500"/>
+  <text class="t" x="480" y="32" text-anchor="middle" fill="#2EAADC">A common RFIC, a flexible SoC: innovate around the chip, not in it</text>
+
+  <!-- RFIC -->
+  <rect class="rfic" x="30" y="120" width="190" height="150" rx="12"/>
+  <text class="cyan" x="125" y="170" text-anchor="middle">ADI AD9361</text>
+  <text class="sub"  x="125" y="192" text-anchor="middle">2T2R, 12-bit</text>
+  <text class="sub"  x="125" y="210" text-anchor="middle">up to 122.88 MSPS</text>
+  <text class="sub"  x="125" y="234" text-anchor="middle">proven, common</text>
+
+  <!-- FPGA / LiteX SoC -->
+  <rect class="fpga" x="320" y="95" width="270" height="200" rx="12"/>
+  <text class="t"   x="455" y="122" text-anchor="middle">Artix-7 XC7A200T</text>
+  <text class="cyan" x="455" y="142" text-anchor="middle">LiteX SoC</text>
+  <rect x="345" y="160" width="220" height="38" rx="8" fill="#102a33" stroke="#2EAADC"/>
+  <text class="lbl" x="455" y="184" text-anchor="middle">AD9361 PHY + DMA</text>
+  <rect x="345" y="208" width="220" height="38" rx="8" fill="#1a1b17" stroke="#2EAADC"/>
+  <text class="lbl" x="455" y="232" text-anchor="middle">room for your RF processing</text>
+  <text class="sub" x="455" y="270" text-anchor="middle">debug: host bridges + LiteScope</text>
+
+  <!-- RFIC <-> FPGA -->
+  <line class="wire" x1="220" y1="195" x2="320" y2="195"/>
+
+  <!-- transports -->
+  <g>
+    <rect class="box" x="690" y="96"  width="240" height="36" rx="8"/>
+    <text class="lbl" x="705" y="120">LitePCIe  (Gen2 x4, ~14 Gbps)</text>
+    <rect class="box" x="690" y="140" width="240" height="36" rx="8"/>
+    <text class="lbl" x="705" y="164">LiteEth  (1G / 2.5G)</text>
+    <rect class="box" x="690" y="184" width="240" height="36" rx="8"/>
+    <text class="lbl" x="705" y="208">LiteSATA  (record to SSD)</text>
+    <rect class="box" x="690" y="228" width="240" height="36" rx="8"/>
+    <text class="lbl" x="705" y="252">LiteICLink  (SerDes, multi-board)</text>
+  </g>
+  <!-- FPGA -> transports (fan) -->
+  <line class="wire" x1="590" y1="150" x2="690" y2="114"/>
+  <line class="wire" x1="590" y1="175" x2="690" y2="158"/>
+  <line class="wire" x1="590" y1="205" x2="690" y2="202"/>
+  <line class="wire" x1="590" y1="235" x2="690" y2="246"/>
+
+  <!-- sync bar -->
+  <rect class="sync" x="320" y="330" width="610" height="50" rx="10"/>
+  <text class="cyan" x="345" y="352">Timing &amp; sync</text>
+  <text class="lbl"  x="345" y="370">PCIe PTM   ·   Ethernet PTP   ·   White Rabbit (sub-nanosecond)</text>
+  <line class="wire" x1="455" y1="295" x2="455" y2="328"/>
+
+  <text class="sub" x="480" y="430" text-anchor="middle">One M.2 board: reuse the PCIe lanes for Ethernet or SATA, add SerDes, discipline it from PTM/PTP/White Rabbit.</text>
+  <text class="sub" x="480" y="452" text-anchor="middle">Hardware by Lambdaconcept, gateware and software by Enjoy-Digital, all open source.</text>
+</svg>
