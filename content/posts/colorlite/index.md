@@ -187,4 +187,4 @@ The board is open: [github.com/enjoy-digital/colorlite](https://github.com/enjoy
 [LiteEth](https://github.com/enjoy-digital/liteeth), on a ColorLight 5A-75B with the open-source
 Yosys / NextPnr / Trellis ECP5 flow.*
 
-*Work and ideas by enjoy-digital; written up with AI in the loop.*
+*Work and ideas by Enjoy-Digital; written up with AI in the loop.*

@@ -179,4 +179,4 @@ notes) are at [github.com/enjoy-digital/mquickjs-on-litex](https://github.com/en
 *Built on [LiteX](https://github.com/enjoy-digital/litex) and Fabrice Bellard's
 [mquickjs](https://github.com/bellard/mquickjs).*
 
-*Work and ideas by enjoy-digital; written up with AI in the loop.*
+*Work and ideas by Enjoy-Digital; written up with AI in the loop.*

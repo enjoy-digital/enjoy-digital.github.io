@@ -9,7 +9,7 @@ showWordCount: false
 ---
 
 Hi, I'm **Florent Kermarrec**. I started [LiteX](https://github.com/enjoy-digital/litex) and
-I'm its main developer at [enjoy-digital](https://github.com/enjoy-digital), though by now
+I'm its main developer at [Enjoy-Digital](https://github.com/enjoy-digital), though by now
 it's very much a community project, with a lot of people contributing cores, ports and fixes.
 
 LiteX is an open-source framework that lets you build FPGA SoCs (CPUs,
@@ -25,7 +25,7 @@ actually works.
 If you want to follow along or build something yourself:
 
 - **LiteX:** <https://github.com/enjoy-digital/litex>
-- **enjoy-digital:** <https://github.com/enjoy-digital>
+- **Enjoy-Digital:** <https://github.com/enjoy-digital>
 - **Chat:** the LiteX community hangs out on Discord and IRC (`#litex` on Libera).
 - **Email:** [florent@enjoy-digital.fr](mailto:florent@enjoy-digital.fr)
 

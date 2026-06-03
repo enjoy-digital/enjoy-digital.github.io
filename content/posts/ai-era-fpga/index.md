@@ -23,7 +23,7 @@ is broken, and go round again. That works because LiteX has always been command-
 first. No big IDE, no click-through GUI, no proprietary project format. You describe an SoC in
 Python, build it from the shell, and talk to the board with small command-line tools.
 
-That was a deliberate, slightly boring choice, made for cost reasons. The goal at enjoy-digital
+That was a deliberate, slightly boring choice, made for cost reasons. The goal at Enjoy-Digital
 was cost-effective hardware for clients: reuse common work, avoid reinventing the same blocks,
 avoid sinking time into heavy tooling. Text and a terminal travel everywhere, script easily, and
 need no license.
@@ -236,4 +236,4 @@ not be driven this way.
 LiteX-M2SDR: [github.com/enjoy-digital/litex_m2sdr](https://github.com/enjoy-digital/litex_m2sdr),
 and its [debugging guide](https://github.com/enjoy-digital/litex_m2sdr/blob/main/doc/debugging-guide.md).*
 
-*Work and ideas by enjoy-digital; written up with AI in the loop.*
+*Work and ideas by Enjoy-Digital; written up with AI in the loop.*

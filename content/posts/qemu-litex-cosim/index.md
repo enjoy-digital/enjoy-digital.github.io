@@ -363,4 +363,4 @@ you're actually building. 🙂
 *Code: LiteX PR [#2468](https://github.com/enjoy-digital/litex/pull/2468). The LiteX community
 is on Discord and `#litex` on Libera if you want to talk about it.*
 
-*Work and ideas by enjoy-digital; written up with AI in the loop.*
+*Work and ideas by Enjoy-Digital; written up with AI in the loop.*

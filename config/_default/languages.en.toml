@@ -10,14 +10,14 @@ title = "LiteX Notes"
   rtl = false
   dateFormat = "2 January 2006"
   logo = "img/litex_logo.png"
-  description = "Notes on building open-source FPGA SoCs with LiteX, by enjoy-digital."
+  description = "Notes on building open-source FPGA SoCs with LiteX, by Enjoy-Digital."
   copyright = "Built with Hugo. Content BSD-2-Clause, like LiteX."
 
 [params.author]
   name = "Florent Kermarrec"
   image = "img/litex_logo.png"
   imageQuality = 96
-  headline = "LiteX main developer · enjoy-digital"
+  headline = "LiteX main developer · Enjoy-Digital"
   bio = "Building hardware, easily. I write open-source FPGA tooling (LiteX) and occasionally tell stories about it here."
   links = [
     { github = "https://github.com/enjoy-digital" },
