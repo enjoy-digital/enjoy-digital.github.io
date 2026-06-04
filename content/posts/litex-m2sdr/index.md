@@ -1,6 +1,6 @@
 ---
 title: "LiteX M2SDR: a familiar RFIC, a different approach"
-date: 2026-06-02T13:30:00+02:00
+date: 2026-06-03T12:00:00+02:00
 draft: false
 description: "Building AD9361 SDRs for clients since 2014, we made our own: an open M.2 board where the RFIC is ordinary and the SoC is where the innovation happens. How LiteX lets you reuse the same PCIe lanes for Ethernet or SATA, why it makes LiteX better, and the White Rabbit timing work with FEMTO-ST."
 summary: "Our own open AD9361 SDR in an M.2 form factor, built on LiteX. Why we kept the ordinary RFIC, the transports (PCIe, Ethernet, SATA), the White Rabbit timing work, and what's next."

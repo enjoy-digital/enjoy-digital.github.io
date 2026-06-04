@@ -1,6 +1,6 @@
 ---
 title: "MicroPython on LiteX: Python at both ends"
-date: 2026-06-02T13:00:00+02:00
+date: 2026-06-03T10:00:00+02:00
 draft: false
 description: "Describe an FPGA SoC in Python with LiteX, then run Python on the softcore you just built. The history from Fupy and TimVideos.us to the recent upstream MicroPython 1.28 rebase, what works today (networking, SD, SPI flash), and where it goes."
 summary: "Describe the SoC in Python, then run Python on it. The MicroPython-on-LiteX port, from its Fupy origins to a fresh rebase onto upstream MicroPython 1.28, with networking, SD and SPI-flash storage across 150+ boards."
