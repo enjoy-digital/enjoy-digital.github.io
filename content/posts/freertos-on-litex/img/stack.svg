@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 540" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .paper { fill:#0f1218; }
+      .t     { fill:#ffffff; font-size:16px; font-weight:700; }
+      .lbl   { fill:#cfd2cc; font-size:12.5px; }
+      .sub   { fill:#8e96a2; font-size:11px; }
+      .py    { fill:#102a33; stroke:#22d3ee; stroke-width:2.5; }
+      .pytxt { fill:#67e8f9; font-size:13px; font-weight:700; }
+      .box   { fill:#1c2129; stroke:#2EAADC; stroke-width:1.8; }
+      .side  { fill:#2EAADC; font-size:12px; font-weight:700; }
+      .down  { fill:none; stroke:#2EAADC; stroke-width:2; marker-end:url(#a); }
+    </style>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2EAADC"/></marker>
+  </defs>
+
+  <rect class="paper" x="0" y="0" width="980" height="540"/>
+  <text class="t" x="490" y="34" text-anchor="middle" fill="#2EAADC">Unmodified kernel on top, LiteX below, one thin layer in between</text>
+
+  <rect class="box" x="190" y="64" width="600" height="56" rx="9"/>
+  <text class="lbl" x="490" y="87" text-anchor="middle">examples/*.c: your tasks</text>
+  <text class="sub" x="490" y="106" text-anchor="middle">blinky_only · queues · full_demo (6 tasks + shell)</text>
+
+  <rect class="box" x="190" y="136" width="600" height="66" rx="9"/>
+  <text class="lbl" x="490" y="161" text-anchor="middle">FreeRTOS-Kernel V11.3.0, unmodified upstream submodule</text>
+  <text class="sub" x="490" y="181" text-anchor="middle">scheduler · queues · mutexes · timers · notifications · stream buffers · heap_4</text>
+
+  <rect class="py" x="190" y="218" width="600" height="66" rx="9"/>
+  <text class="pytxt" x="490" y="243" text-anchor="middle">port_litex.c + crt0.S: the whole port</text>
+  <text class="sub" x="490" y="263" text-anchor="middle">tick from timer0 · IRQ dispatch · UART with an IRQ-fed stream buffer</text>
+
+  <rect class="box" x="190" y="300" width="600" height="66" rx="9"/>
+  <text class="lbl" x="490" y="325" text-anchor="middle">LiteX SoC</text>
+  <text class="sub" x="490" y="345" text-anchor="middle">VexRiscv (rv32) · timer0 · UART · generated CSR accessors</text>
+
+  <line class="down" x1="340" y1="366" x2="340" y2="404"/>
+  <line class="down" x1="640" y1="366" x2="640" y2="404"/>
+  <text class="side" x="490" y="392" text-anchor="middle">same firmware.bin</text>
+
+  <rect class="box" x="200" y="408" width="280" height="62" rx="9"/>
+  <text class="lbl" x="340" y="433" text-anchor="middle">litex_sim (Verilator)</text>
+  <text class="sub" x="340" y="453" text-anchor="middle">1 MHz · no FPGA needed · CI runs here</text>
+
+  <rect class="box" x="500" y="408" width="280" height="62" rx="9"/>
+  <text class="lbl" x="640" y="433" text-anchor="middle">Digilent Arty A7</text>
+  <text class="sub" x="640" y="453" text-anchor="middle">100 MHz · LEDs on, wall-clock ticks</text>
+
+  <text class="sub" x="490" y="510" text-anchor="middle">The cyan layer is all that had to be written; everything above and below already existed.</text>
+</svg>
