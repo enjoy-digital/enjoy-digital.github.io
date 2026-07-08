@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 360" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .paper { fill:#0f1218; }
+      .t     { fill:#ffffff; font-size:16px; font-weight:700; }
+      .lbl   { fill:#cfd2cc; font-size:12.5px; }
+      .sub   { fill:#8e96a2; font-size:11px; }
+      .seg1  { fill:#102a33; stroke:#22d3ee; stroke-width:2; }
+      .seg2  { fill:#164e5a; stroke:#22d3ee; stroke-width:2; }
+      .seg3  { fill:#3a4250; stroke:#8e96a2; stroke-width:1.5; }
+      .free  { fill:#1c2129; stroke:#464d59; stroke-width:1; }
+      .lead  { stroke:#8e96a2; stroke-width:1; fill:none; }
+      .tick  { stroke:#464d59; stroke-width:1; }
+    </style>
+  </defs>
+
+  <rect class="paper" x="0" y="0" width="980" height="360"/>
+  <text class="t" x="490" y="34" text-anchor="middle" fill="#2EAADC">The 32 MB boot layout</text>
+
+  <!-- bar: 900px = 32 MiB, 28.125 px/MiB, x0=40 -->
+  <rect class="free" x="40"  y="150" width="900" height="56"/>
+  <rect class="seg1" x="40"  y="150" width="231" height="56"/>
+  <rect class="seg3" x="462" y="150" width="14"  height="56"/>
+  <rect class="seg2" x="490" y="150" width="127" height="56"/>
+
+  <!-- DTB sliver -->
+  <rect x="458" y="150" width="4" height="56" fill="#67e8f9"/>
+
+  <!-- labels above -->
+  <text class="lbl" x="150" y="106" text-anchor="middle">kernel Image</text>
+  <text class="sub" x="150" y="124" text-anchor="middle">0x40000000 · ~8.2 MiB</text>
+  <polyline class="lead" points="150,132 150,146"/>
+
+  <text class="lbl" x="460" y="72" text-anchor="middle">DTB</text>
+  <text class="sub" x="460" y="90" text-anchor="middle">0x40ef0000</text>
+  <polyline class="lead" points="460,96 460,146"/>
+
+  <text class="lbl" x="620" y="106" text-anchor="middle">initramfs (rootfs.cpio.gz)</text>
+  <text class="sub" x="620" y="124" text-anchor="middle">0x41000000 · 4.5 MiB compressed</text>
+  <polyline class="lead" points="580,132 560,146"/>
+
+  <!-- labels below -->
+  <text class="lbl" x="500" y="248" text-anchor="middle">OpenSBI</text>
+  <text class="sub" x="500" y="266" text-anchor="middle">0x40f00000 · 512 KiB, reserved,</text>
+  <text class="sub" x="500" y="282" text-anchor="middle">executes in place from HyperRAM</text>
+  <polyline class="lead" points="470,210 480,240"/>
+
+  <text class="lbl" x="790" y="248" text-anchor="middle">free for Linux</text>
+  <text class="sub" x="790" y="266" text-anchor="middle">page cache, processes, everything else</text>
+
+  <text class="sub" x="365" y="185" text-anchor="middle">reclaimed once Linux runs</text>
+
+  <!-- ticks -->
+  <line class="tick" x1="40"  y1="206" x2="40"  y2="216"/>
+  <text class="sub" x="40"  y="230" text-anchor="start">0x40000000</text>
+  <line class="tick" x1="940" y1="206" x2="940" y2="216"/>
+  <text class="sub" x="940" y="230" text-anchor="end">0x42000000</text>
+
+  <text class="sub" x="490" y="330" text-anchor="middle">With the rootfs on SD card the initramfs region is freed too; the project rule of thumb is 8 MB with SD/NFS root.</text>
+</svg>
