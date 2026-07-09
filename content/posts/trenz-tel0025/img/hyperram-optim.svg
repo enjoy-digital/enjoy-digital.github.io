@@ -46,7 +46,7 @@
   </g>
   <text class="lbl" x="850" y="126">...</text>
   <text class="sub" x="60" y="162">one 32-bit word of data per command, then a long CS-high pause</text>
-  <text class="num" x="60" y="192">BIOS memspeed: 5.2 / 14.6 MiB/s write / read (50 MHz sys)</text>
+  <text class="num" x="60" y="192">BIOS memspeed: 5.2 / 14.6 MiB/s write / read (50 MHz bring-up sys)</text>
 
   <!-- AFTER -->
   <text class="lbl" x="60" y="268">After: 2:1 clocking, 2-cycle gap, adjacent accesses continue the open command</text>
@@ -92,7 +92,7 @@
   </g>
   <text class="lbl" x="850" y="306">...</text>
   <text class="sub" x="60" y="342">contiguous words ride the same command; the pause between commands is 2 cycles</text>
-  <text class="num" x="60" y="372">BIOS memspeed: 46.7 / 22.7 MiB/s write / read (50 MHz sys)</text>
+  <text class="num" x="60" y="372">BIOS memspeed: 46.7 / 22.7 MiB/s write / read (50 MHz bring-up sys)</text>
 
   <!-- Legend -->
   <g>
@@ -106,5 +106,5 @@
     <text class="sub" x="576" y="450">CS-high gap</text>
   </g>
 
-  <text class="sub" x="490" y="500" text-anchor="middle" font-style="italic">Illustrative proportions, not cycle-exact. Both measurements at 50 MHz sys clock, 2:1 HyperRAM clock.</text>
+  <text class="sub" x="490" y="500" text-anchor="middle" font-style="italic">Illustrative proportions, not cycle-exact. Numbers from the 50 MHz bring-up build; final target: 75 MHz sys.</text>
 </svg>

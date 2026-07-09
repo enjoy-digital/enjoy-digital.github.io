@@ -10,11 +10,10 @@ showHero: false
 ---
 
 *TL;DR: the DIPSY-40NX (Trenz article TEL0025) pairs a Lattice Certus-NX with 32 MB of HyperRAM.
-We brought it up in
-LiteX, spent an optimization pass on the HyperRAM core (2:1 clocking, shorter CS gaps, command
-continuation) that took BIOS memspeed from 5.2/14.6 to 46.7/22.7 MiB/s write/read, fixed a subtle
-bursting bug that corrupted OpenSBI executing in place from HyperRAM, and booted Linux 6.9 on the
-result. 32 MB is enough.*
+We brought it up in LiteX, tuned the HyperRAM core, fixed a burst bug that corrupted OpenSBI when it
+executed in place from HyperRAM, and booted Linux 6.9 on the result. The final target runs the SoC
+at 75 MHz; the bandwidth table keeps the original 50 MHz bring-up measurements so each HyperRAM
+change is compared at the same clock. 32 MB is enough.*
 
 {{< figure src="img/tel0025-board.png" alt="The DIPSY-40NX board: a small DIP-form-factor module with TEL0025-01 printed on the silkscreen, a USB-C connector, an SD card slot, a camera FFC connector, the Certus-NX FPGA and the HyperRAM" caption="The DIPSY-40NX, TEL0025-01 on the silkscreen: USB-C, SD slot, a camera FFC connector, a Certus-NX and its HyperRAM, all in a DIP-sized module." >}}
 
@@ -30,9 +29,14 @@ the star of this note, **32 MB of HyperRAM**.
 
 LiteX support landed in
 [LiteX-Boards](https://github.com/litex-hub/litex-boards) in June as the `trenz_tel0025` platform
-and target. The clocking is standard Nexus fare: an NXPLL takes the 25 MHz input and generates a
-75 MHz system clock, plus a 2x clock that the HyperRAM core needs for its faster clocking mode
-(more on that below).
+and target. The board has a 25 MHz oscillator. In the committed target, an NXPLL turns that into
+the **75 MHz system clock** used by the CPU and LiteX SoC, plus a `sys2x` clock for the HyperRAM
+core's 2:1 mode. In that mode the HyperRAM CK itself is `sys/2`, so 37.5 MHz on the final
+75 MHz target; `sys2x` is only the internal phase clock used by the PHY.
+
+You will still see 50 MHz in the HyperRAM performance section below. Those are fixed-clock
+measurements from the earlier bring-up bitstream, kept because they show the effect of the core
+changes without mixing in a clock change. The Linux design described later is the 75 MHz one.
 
 ## Main memory over thirteen pins
 
@@ -68,17 +72,17 @@ gateware generic and lets the software pick the timing.
 
 ## Making it fast
 
-The first `memspeed` numbers at 50 MHz were humbling: **5.2 MiB/s write, 14.6 MiB/s read**. The
-FPGA was not the bottleneck; the protocol overhead was. Every 32-bit access paid a full command
-sequence, the access latency, and a long chip-select-high pause before the next command could
-start. The optimization pass attacked all three, in three steps.
+The first `memspeed` numbers came from the 50 MHz bring-up bitstream: **5.2 MiB/s write,
+14.6 MiB/s read**. The FPGA was not the bottleneck; the protocol overhead was. Every 32-bit access
+paid a full command sequence, the access latency, and a long chip-select-high pause before the next
+command could start. The optimization pass attacked all three, in three steps.
 
 ### 2:1 clocking
 
-The core's default 4:1 clocking is safe and slow: the HyperRAM bus runs at a quarter of the
-system clock. The 2:1 mode halves that division using the `sys2x` clock domain for its phases,
-which is why the CRG grew a second PLL output. This is the
-`clk_ratio="2:1"` in the snippet above.
+The core's default 4:1 clocking is safe and slow: the HyperRAM CK runs at a quarter of the
+system clock. The 2:1 mode raises it to half the system clock, using the `sys2x` clock domain for
+the PHY phases, which is why the CRG grew a second PLL output. This is the `clk_ratio="2:1"` in
+the snippet above.
 
 ### Shorter CS gaps
 
@@ -97,7 +101,8 @@ generates, rides a single long command instead of thousands of short ones. Write
 
 {{< figure src="img/hyperram-optim.svg" alt="Two command timelines: before, each 32-bit access pays command, latency and a long CS-high gap so most of the bar is overhead; after, contiguous words continue a single open command with a 2-cycle gap, so most of the bar is data" caption="The same traffic, before and after. The cyan is data; everything else is protocol overhead. Illustrative proportions, measured numbers below." >}}
 
-The measured progression, all with the BIOS `memspeed` at a 50 MHz system clock:
+The measured progression below is a fixed-clock comparison: every row is a BIOS `memspeed` run on
+that 50 MHz bring-up build.
 
 | Configuration | Write (MiB/s) | Read (MiB/s) |
 | --- | ---: | ---: |
@@ -107,8 +112,8 @@ The measured progression, all with the BIOS `memspeed` at a 50 MHz system clock:
 
 Reads gain less than writes from continuation because every new read command still pays the
 initial access latency before data flows, and read traffic breaks contiguity more often. Still, a
-9x improvement on writes and a decent bump on reads, with no board change and no clock increase:
-just fewer wasted cycles per useful word.
+9x improvement on writes and a decent bump on reads, without changing the board or raising that
+50 MHz test clock: just fewer wasted cycles per useful word.
 
 ## Making it correct
 
@@ -134,7 +139,7 @@ the Wishbone request path within one cycle.
 Every step of this went in with regression tests in
 [`test/test_hyperbus.py`](https://github.com/enjoy-digital/litex/blob/master/test/test_hyperbus.py),
 and the end state was validated on hardware with clean OpenSBI boots and a full 32 MB BIOS
-`mem_test` at 75 MHz. It is the same small-checkable-steps discipline from the
+`mem_test` on the 75 MHz target. It is the same small-checkable-steps discipline from the
 [AI-era post](/posts/ai-era-fpga/): the simulation tests catch the logic mistakes in seconds, the
 board confirms the timing, and an XIP firmware is the ultimate integration test. 🙂
 
