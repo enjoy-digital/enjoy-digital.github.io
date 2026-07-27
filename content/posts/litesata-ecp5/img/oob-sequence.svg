@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 640" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .paper { fill:#0f1218; }
+      .t     { fill:#ffffff; font-size:16px; font-weight:700; }
+      .lbl   { fill:#cfd2cc; font-size:12.5px; }
+      .sub   { fill:#8e96a2; font-size:11px; }
+      .num   { fill:#67e8f9; font-size:12px; font-weight:700; }
+      .box   { fill:#1c2129; stroke:#2EAADC; stroke-width:1.8; }
+      .life  { stroke:#464d59; stroke-width:1.5; stroke-dasharray:5 5; }
+      .arr   { fill:none; stroke:#2EAADC; stroke-width:2; marker-end:url(#a); }
+      .arr2  { fill:none; stroke:#22d3ee; stroke-width:2; marker-end:url(#c); marker-start:url(#cs); }
+      .burst { fill:#22d3ee; }
+      .frame { fill:none; stroke:#464d59; stroke-width:1; }
+    </style>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2EAADC"/></marker>
+    <marker id="c" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#22d3ee"/></marker>
+    <marker id="cs" markerWidth="9" markerHeight="9" refX="0" refY="3" orient="auto"><path d="M7,0 L0,3 L7,6 Z" fill="#22d3ee"/></marker>
+  </defs>
+
+  <rect class="paper" x="0" y="0" width="980" height="640"/>
+  <text class="t" x="490" y="34" text-anchor="middle" fill="#2EAADC">The SATA OOB handshake: the message is in the gap timing</text>
+
+  <!-- lifeline headers -->
+  <rect class="box" x="130" y="60" width="180" height="40" rx="9"/>
+  <text class="lbl" x="220" y="85" text-anchor="middle">HOST · our ECP5</text>
+  <rect class="box" x="670" y="60" width="180" height="40" rx="9"/>
+  <text class="lbl" x="760" y="85" text-anchor="middle">DEVICE · the drive</text>
+
+  <line class="life" x1="220" y1="100" x2="220" y2="500"/>
+  <line class="life" x1="760" y1="100" x2="760" y2="500"/>
+
+  <!-- 1. COMRESET -->
+  <text class="lbl" x="490" y="126" text-anchor="middle">COMRESET · six bursts, 320 ns gaps</text>
+  <g>
+    <rect class="burst" x="364" y="134" width="12" height="16"/>
+    <rect class="burst" x="412" y="134" width="12" height="16"/>
+    <rect class="burst" x="460" y="134" width="12" height="16"/>
+    <rect class="burst" x="508" y="134" width="12" height="16"/>
+    <rect class="burst" x="556" y="134" width="12" height="16"/>
+    <rect class="burst" x="604" y="134" width="12" height="16"/>
+  </g>
+  <line class="arr" x1="220" y1="160" x2="752" y2="160"/>
+  <text class="sub" x="490" y="176" text-anchor="middle">"reset, please"</text>
+
+  <!-- 2. COMINIT -->
+  <text class="lbl" x="490" y="206" text-anchor="middle">COMINIT · same shape as COMRESET</text>
+  <g>
+    <rect class="burst" x="364" y="214" width="12" height="16"/>
+    <rect class="burst" x="412" y="214" width="12" height="16"/>
+    <rect class="burst" x="460" y="214" width="12" height="16"/>
+    <rect class="burst" x="508" y="214" width="12" height="16"/>
+    <rect class="burst" x="556" y="214" width="12" height="16"/>
+    <rect class="burst" x="604" y="214" width="12" height="16"/>
+  </g>
+  <line class="arr" x1="760" y1="240" x2="228" y2="240"/>
+  <text class="sub" x="490" y="256" text-anchor="middle">"I am here"</text>
+
+  <!-- 3. COMWAKE host -->
+  <text class="lbl" x="490" y="286" text-anchor="middle">COMWAKE · six bursts, 106.7 ns gaps</text>
+  <g>
+    <rect class="burst" x="418" y="294" width="12" height="16"/>
+    <rect class="burst" x="442" y="294" width="12" height="16"/>
+    <rect class="burst" x="466" y="294" width="12" height="16"/>
+    <rect class="burst" x="490" y="294" width="12" height="16"/>
+    <rect class="burst" x="514" y="294" width="12" height="16"/>
+    <rect class="burst" x="538" y="294" width="12" height="16"/>
+  </g>
+  <line class="arr" x1="220" y1="320" x2="752" y2="320"/>
+  <text class="sub" x="490" y="336" text-anchor="middle">"wake up"</text>
+
+  <!-- 4. COMWAKE device -->
+  <text class="lbl" x="490" y="366" text-anchor="middle">COMWAKE</text>
+  <line class="arr" x1="760" y1="378" x2="228" y2="378"/>
+  <text class="sub" x="490" y="394" text-anchor="middle">same, from the device</text>
+
+  <!-- 5. ALIGN -->
+  <text class="lbl" x="490" y="424" text-anchor="middle">ALIGN primitives, at line rate</text>
+  <line class="arr2" x1="228" y1="436" x2="752" y2="436"/>
+  <text class="sub" x="490" y="452" text-anchor="middle">first real data: CDR locks, 8b10b decodes, word alignment, speed negotiated</text>
+
+  <!-- 6. link up -->
+  <text class="lbl" x="490" y="480" text-anchor="middle">link up · SYNC, then FIS traffic</text>
+  <line class="arr2" x1="228" y1="492" x2="752" y2="492"/>
+
+  <!-- bottom note -->
+  <text class="sub" x="490" y="546" text-anchor="middle">The receiver's whole job during OOB: a squelch (is there activity?) plus a timer (how long was the quiet?).</text>
+  <text class="num" x="490" y="572" text-anchor="middle">Burst content barely matters. The gap duration is the message: 106.7 ns says COMWAKE, 320 ns says COMRESET/COMINIT.</text>
+  <text class="sub" x="490" y="608" text-anchor="middle" font-style="italic">Burst trains drawn to relative scale: bursts are 106.7 ns; COMRESET gaps are 3x a COMWAKE gap.</text>
+</svg>

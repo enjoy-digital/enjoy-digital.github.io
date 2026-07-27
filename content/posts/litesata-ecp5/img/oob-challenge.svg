@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 640" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .paper { fill:#0f1218; }
+      .t     { fill:#ffffff; font-size:16px; font-weight:700; }
+      .lbl   { fill:#cfd2cc; font-size:12.5px; }
+      .sub   { fill:#8e96a2; font-size:11px; }
+      .num   { fill:#67e8f9; font-size:12px; font-weight:700; }
+      .burst { fill:#22d3ee; }
+      .gapok { fill:#1c2129; stroke:#464d59; stroke-width:1; }
+      .wall  { fill:#3a4250; stroke:#8e96a2; stroke-width:1; }
+      .win   { fill:none; stroke:#22d3ee; stroke-width:1.5; stroke-dasharray:4 3; }
+      .frame { fill:none; stroke:#464d59; stroke-width:1; }
+      .wave  { fill:none; stroke:#22d3ee; stroke-width:2; }
+      .flat  { fill:none; stroke:#22d3ee; stroke-width:2; }
+      .sep   { stroke:#0f1218; stroke-width:1; }
+    </style>
+  </defs>
+
+  <rect class="paper" x="0" y="0" width="980" height="640"/>
+  <text class="t" x="490" y="34" text-anchor="middle" fill="#2EAADC">SATA OOB on ECP5: the requirement, the wall, the way out</text>
+
+  <!-- Requirement -->
+  <text class="lbl" x="60" y="76">The requirement: six bursts, separated by precisely timed gaps (referenced to the gen1 UI whatever the linerate)</text>
+  <g>
+    <rect class="burst" x="60"  y="92" width="30" height="30"/>
+    <rect class="gapok" x="90"  y="92" width="30" height="30"/>
+    <rect class="burst" x="120" y="92" width="30" height="30"/>
+    <rect class="gapok" x="150" y="92" width="30" height="30"/>
+    <rect class="burst" x="180" y="92" width="30" height="30"/>
+    <rect class="gapok" x="210" y="92" width="30" height="30"/>
+    <rect class="burst" x="240" y="92" width="30" height="30"/>
+    <rect class="frame" x="60" y="92" width="210" height="30"/>
+  </g>
+  <text class="lbl" x="285" y="112">...</text>
+  <g>
+    <rect class="burst" x="520" y="92" width="30" height="30"/>
+    <rect class="gapok" x="550" y="92" width="90" height="30"/>
+    <rect class="burst" x="640" y="92" width="30" height="30"/>
+    <rect class="gapok" x="670" y="92" width="90" height="30"/>
+    <rect class="burst" x="760" y="92" width="30" height="30"/>
+    <rect class="frame" x="520" y="92" width="270" height="30"/>
+  </g>
+  <text class="lbl" x="805" y="112">...</text>
+  <text class="sub" x="60"  y="142">COMWAKE: gap 106.7 ns (shall-detect 101.3 to 112 ns)</text>
+  <text class="sub" x="520" y="142">COMRESET/COMINIT: gap 320 ns (shall-detect 304 to 336 ns)</text>
+  <text class="sub" x="60"  y="162">burst: always 106.7 ns of D24.3 at the gen1 rate (a 375 MHz square, even at 3.0 Gb/s); gap-to-burst drawn to scale</text>
+
+  <!-- The wall -->
+  <text class="lbl" x="60" y="212">The wall: the DCU's electrical idle cannot switch anywhere near that fast</text>
+
+  <!-- scale: 1 ns = 1.2 px, x0 = 60 -->
+  <line x1="60" y1="360" x2="900" y2="360" stroke="#464d59" stroke-width="1"/>
+  <g>
+    <line x1="60"  y1="356" x2="60"  y2="364" stroke="#8e96a2"/>
+    <line x1="300" y1="356" x2="300" y2="364" stroke="#8e96a2"/>
+    <line x1="540" y1="356" x2="540" y2="364" stroke="#8e96a2"/>
+    <line x1="780" y1="356" x2="780" y2="364" stroke="#8e96a2"/>
+    <text class="sub" x="60"  y="380" text-anchor="middle">0</text>
+    <text class="sub" x="300" y="380" text-anchor="middle">200 ns</text>
+    <text class="sub" x="540" y="380" text-anchor="middle">400 ns</text>
+    <text class="sub" x="780" y="380" text-anchor="middle">600 ns</text>
+  </g>
+
+  <!-- windows -->
+  <rect class="win" x="181" y="232" width="13" height="86"/>
+  <text class="sub" x="188" y="226" text-anchor="middle">COMWAKE window</text>
+  <rect class="win" x="425" y="232" width="38" height="86"/>
+  <text class="sub" x="444" y="226" text-anchor="middle">COMRESET window</text>
+
+  <!-- bars -->
+  <rect class="wall" x="60" y="244" width="264" height="26"/>
+  <text class="sub" x="480" y="262">minimum EI pulse, measured 2022 (Versa-ECP5): ~220 ns</text>
+  <rect class="wall" x="60" y="284" width="780" height="26"/>
+  <text class="num" x="848" y="302">~650 ns</text>
+  <text class="sub" x="60" y="336">EI pipeline floor, measured 2026 (ECPIX-5, word-synchronous PCIe-EI path): the same wall, four years apart</text>
+
+  <!-- The way out -->
+  <text class="lbl" x="60" y="432">The way out: make the gaps out of data, not electrical idle</text>
+
+  <!-- burst waveform -->
+  <polyline class="wave" points="60,486 60,462 78,462 78,486 96,486 96,462 114,462 114,486 132,486 132,462 150,462 150,486 168,486 168,462 186,462 186,486 204,486 204,462 222,462 222,486 240,486"/>
+  <!-- gap: constant level -->
+  <polyline class="flat" points="240,474 420,474"/>
+  <!-- burst again -->
+  <polyline class="wave" points="420,486 420,462 438,462 438,486 456,486 456,462 474,462 474,486 492,486 492,462 510,462 510,486 528,486 528,462 546,462 546,486 564,486"/>
+  <text class="sub" x="150" y="510" text-anchor="middle">burst: toggling pattern</text>
+  <text class="sub" x="330" y="510" text-anchor="middle">gap: constant pattern</text>
+  <text class="sub" x="492" y="510" text-anchor="middle">burst</text>
+
+  <text class="sub" x="620" y="470">still driven, but zero transitions:</text>
+  <text class="sub" x="620" y="488">a real squelch counts transitions,</text>
+  <text class="sub" x="620" y="506">not volts. It reads as idle.</text>
+
+  <text class="num" x="60" y="556">Serializer switches burst to gap in one 20-bit word: 6.7 ns. The ~650 ns EI pipeline is out of the loop entirely.</text>
+  <text class="sub" x="490" y="600" text-anchor="middle" font-style="italic">Timing per the SATA spec's shall-detect windows; EI floors as measured on hardware. Proportions to scale on the 200 ns/240 px axis.</text>
+</svg>
