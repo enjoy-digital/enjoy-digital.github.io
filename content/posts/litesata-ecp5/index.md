@@ -37,7 +37,7 @@ drive answered with COMINIT, and then nothing; it never accepted our COMWAKE. In
 came back with a Versa board and measured why: the shortest electrical-idle pulse the DCU would
 actually produce was about **220 ns**, and a COMWAKE gap must be 106.7 ns. In 2023 I wrote it all
 up as issue #27, with a roadmap and a pointer to
-[ktemkin's LFPS work](https://lab.ktemkin.com/post/serdes-lfps/) as the likely direction:
+[ktemkin's LFPS work](https://ktemk.in/post/serdes-lfps/) as the likely direction:
 
 > Some initial tests have been done to generate/receive COMRESET/COMINIT/COMWAKE in the ecp5
 > branch, but the integrated electrical idle detection feature of the ECP5 was apparently not
@@ -344,7 +344,7 @@ journal for the curious.
 [LiteICLink](https://github.com/enjoy-digital/liteiclink) and
 [LiteScope](https://github.com/enjoy-digital/litescope), on a
 [LambdaConcept ECPIX-5](https://shop.lambdaconcept.com/home/46-2-ecpix-5.html).
-[ktemkin's LFPS write-up](https://lab.ktemkin.com/post/serdes-lfps/) is the acknowledged prior
+[ktemkin's LFPS write-up](https://ktemk.in/post/serdes-lfps/) is the acknowledged prior
 art for driving OOB-class signaling from ECP5 user logic.*
 
 *Work and ideas by Enjoy-Digital; engineered and written up with AI in the loop: Claude on the

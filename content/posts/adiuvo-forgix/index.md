@@ -43,7 +43,7 @@ The **Forgix** is made by Adiuvo Engineering, Adam Taylor's company, and it is a
 the [schematic and KiCad files](https://bitbucket.org/adiuvo-engineering/forgix_public/src/main/)
 are public. On it, an RP2350 sits next to an **Efinix Trion T8** (T8F49C2), with the RP2350 wired
 to the FPGA's passive-SPI configuration pins. LiteX-Boards has an
-[`adiuvo_forgix`](https://github.com/enjoy-digital/litex-boards) target for it.
+[`adiuvo_forgix`](https://github.com/litex-hub/litex-boards) target for it.
 
 The pins that matter for this note are few. Three for the shared SPI:
 
@@ -252,7 +252,7 @@ whatever the MCU runs. No softcore required. 🙂
 ---
 
 *Built on [LiteX](https://github.com/enjoy-digital/litex) and
-[LiteX-Boards](https://github.com/enjoy-digital/litex-boards). The
+[LiteX-Boards](https://github.com/litex-hub/litex-boards). The
 [Forgix](https://bitbucket.org/adiuvo-engineering/forgix_public/src/main/) board is by Adiuvo
 Engineering; the SPIBone core was originally written by Sean Cross. Board photo from
 LinuxGizmos.com.*

@@ -136,8 +136,7 @@ a next request that is already valid and verified contiguous; it never guesses. 
 broke a combinatorial loop that Radiant flagged, where the HyperRAM response path fed back into
 the Wishbone request path within one cycle.
 
-Every step of this went in with regression tests in
-[`test/test_hyperbus.py`](https://github.com/enjoy-digital/litex/blob/master/test/test_hyperbus.py),
+Every step of this went in with regression tests in `test/test_hyperbus.py`,
 and the end state was validated on hardware with clean OpenSBI boots and a full 32 MB BIOS
 `mem_test` on the 75 MHz target. It is the same small-checkable-steps discipline from the
 [AI-era post](/posts/ai-era-fpga/): the simulation tests catch the logic mistakes in seconds, the
