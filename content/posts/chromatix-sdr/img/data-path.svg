@@ -30,7 +30,7 @@
   <text class="lbl" x="130" y="220" text-anchor="middle" fill="#67e8f9">ESP-SDR</text>
   <text class="sub" x="130" y="238" text-anchor="middle">modem bypass, I/Q bursts</text>
   <text class="sub" x="130" y="254" text-anchor="middle">+ QSPI transport, tuning</text>
-  <text class="sub" x="130" y="268" text-anchor="middle">2150-2880 MHz</text>
+  <text class="sub" x="130" y="268" text-anchor="middle">1792-2880 MHz</text>
   <line class="w" x1="130" y1="166" x2="130" y2="192"/>
   <text class="sub" x="130" y="300" text-anchor="middle">16/40/80 MS/s</text>
   <text class="sub" x="130" y="316" text-anchor="middle">up to 16380 samples</text>

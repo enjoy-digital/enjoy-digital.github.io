@@ -2,8 +2,8 @@
 title: "ChromatiX SDR: a spectrum analyzer from the Chromatic's ESP32"
 date: 2026-10-05T08:30:00+02:00
 draft: false
-description: "ESPARGOS' ESP-SDR gets raw I/Q samples out of an ESP32's Wi-Fi radio. The ModRetro Chromatic has an ESP32 next to its FPGA, so we turned the console into a handheld 2.4 GHz spectrum analyzer: captures over the existing QSPI link into PSRAM, an FFT on a VexRiscv, a spectrum/waterfall UI on the LCD, tuning extended to 2150-2880 MHz, and a SoapySDR driver for gqrx and GNU Radio over USB."
-summary: "The Chromatic's ESP32 as an SDR: ESP-SDR on the radio side, the FPGA and a RISC-V on the console side, and a USB link to SoapySDR. How the samples move, how the tuning was pushed from the Wi-Fi channels to 2150-2880 MHz, and what the result can and cannot do."
+description: "ESPARGOS' ESP-SDR gets raw I/Q samples out of an ESP32's Wi-Fi radio. The ModRetro Chromatic has an ESP32 next to its FPGA, so we turned the console into a handheld 2.4 GHz spectrum analyzer: captures over the existing QSPI link into PSRAM, an FFT on a VexRiscv, a spectrum/waterfall UI on the LCD, tuning extended to 1792-2880 MHz, and a SoapySDR driver for gqrx and GNU Radio over USB."
+summary: "The Chromatic's ESP32 as an SDR: ESP-SDR on the radio side, the FPGA and a RISC-V on the console side, and a USB link to SoapySDR. How the samples move, how the tuning was pushed from the Wi-Fi channels to 1792-2880 MHz, and what the result can and cannot do."
 tags: ["litex", "fpga", "sdr", "esp32", "esp-sdr", "soapysdr", "gnuradio", "chromatix", "modretro"]
 categories: ["hardware"]
 showHero: false
@@ -17,7 +17,7 @@ undocumented debug path in Espressif's radios to capture raw I/Q samples from th
 small Chromatic patch, the captures travel over the console's existing QSPI link straight into
 PSRAM, and a VexRiscv computes the FFT and draws a spectrum, waterfall and band scan on the LCD
 at about 26 updates per second. We also pushed the tuning from the Wi-Fi channel frequencies to
-**2150-2880 MHz**. Over USB, the console relays the captures to the PC at 2.4 MB/s, and a SoapySDR
+**1792-2880 MHz**, the last part thanks to a finding from the community. Over USB, the console relays the captures to the PC at 2.4 MB/s, and a SoapySDR
 module makes it a source for gqrx, CubicSDR and GNU Radio. It is a burst receiver with a 2.4 GHz
 antenna, not a wideband SDR, and the post is clear about that too.*
 
@@ -103,7 +103,8 @@ writes a new divider, but the VCO's capacitor bank stays calibrated for 2412 MHz
 follow. ESP-SDR documents its extended range as not RF-validated, so this is not a bug report; it
 just meant the receiver could only look at the Wi-Fi channels.
 
-We fixed it in two steps, in `chromatic_tune.c`, one of the files our build adds to ESP-SDR.
+We extended it in three steps. The first two are ours, in `chromatic_tune.c`, one of the files our
+build adds to ESP-SDR; the third came from the community.
 
 The first step uses a function of Espressif's PHY library, `set_chan_freq_sw_start`, which we found
 by disassembling `libphy.a`. Wi-Fi and the Bluetooth PHY use it for their channels: it runs the full
@@ -120,20 +121,36 @@ the expected result, fitted from the calibration results, makes the calibration 
 **2150 to 2880 MHz**, repeatably, with the LO within 2 kHz. Below 2150 or above 2880 MHz the
 calibration never locks, whatever the starting point; that is the edge of the VCO's range.
 
+The third step came from outside. h0m3us3r's
+[eSpDR](https://github.com/h0m3us3r/eSpDR), another ESP32 SDR project,
+[found](https://github.com/h0m3us3r/eSpDR/blob/main/docs/LO-EXTENSION.md) a selector in the
+radio's clock generator (analog block 0x65, register 0, bit 4) that makes the receive LO
+**5/6 of the PLL frequency**. ESPARGOS then qualified it on the original ESP32 in
+[ESP-SDR](https://github.com/ESPARGOS/esp-sdr/commit/9cfc5e0) with a signal generator. Since our
+table tuning already places the PLL anywhere from 2150 to 2880 MHz, combining the two was direct:
+below 2150 MHz, the firmware tunes the PLL to 6/5 of the requested frequency (calibrating in the
+normal mode), then sets the selector once the receive path is configured. That extends the range
+down to **1792 MHz**, with the LO within 1 to 4 kHz of the request across 1793-2147 MHz. The
+console now tunes **1792 to 2880 MHz** in 1 kHz steps.
+
 On top of that, opening the receiver's low-pass filter at 80 MS/s gives a usable view of about
-±38 MHz around the LO. The console and the PC can see roughly 2112 to 2918 MHz.
+±38 MHz around the LO. The console and the PC can see roughly 1754 to 2918 MHz.
 
 With the antenna and LNA matched for 2.4 GHz, sensitivity outside the ISM band is lower. Real
-signals still come through: the mobile band 1 downlink carriers just below 2170 MHz, and a 20 MHz
-LTE band 7 downlink carrier at 2680 MHz, seen at several LO settings and sample rates so it is not
-an image.
+signals still come through: a 15 MHz LTE band 3 downlink carrier at 1845-1860 MHz, the mobile
+band 1 downlink carriers up to 2170 MHz, and a 20 MHz LTE band 7 downlink carrier at 2680 MHz,
+each seen at several LO settings so they are not images.
 
 {{< figure src="img/sdr_host_2655_80msps.png" alt="Host spectrum plot at 80 MS/s centred on 2655 MHz, showing a flat noise floor with crystal harmonic lines and a block-shaped 20 MHz LTE carrier occupying about 2671 to 2689 MHz" caption="An LTE band 7 downlink carrier at 2680 MHz, captured at 80 MS/s and plotted on the PC. Far outside the Wi-Fi channels the stock firmware could tune." >}}
 
+{{< figure src="img/sdr_host_1842_80msps.png" alt="Host spectrum plot at 80 MS/s centred on 1842 MHz, showing crystal harmonic lines and a 15 MHz block-shaped LTE carrier between 1845 and 1860 MHz" caption="At the other end, with the 5/6 LO mode: a 15 MHz LTE band 3 downlink carrier at 1845-1860 MHz." >}}
+
 Our ESP32 firmware is ESP-SDR pinned to a specific upstream commit, plus a small patch and two
 source files (the QSPI transport and the tuning), all applied by `firmware/esp32-sdr/build.sh`. The
-protocol is unchanged, so the same firmware still works as a stock ESP-SDR with ESPARGOS' viewers. We plan to propose the extended tuning to ESP-SDR upstream, since
-every original-ESP32 user would benefit from it, not only the Chromatic.
+protocol is unchanged, so the same firmware still works as a stock ESP-SDR with ESPARGOS' viewers. We plan to propose the table tuning to ESP-SDR upstream, since
+every original-ESP32 user would benefit from it, not only the Chromatic. The 5/6 mode shows how
+well this works in the other direction: found in eSpDR, qualified in ESP-SDR, and in our firmware
+the next working day.
 
 ## The handheld UI
 
@@ -142,14 +159,14 @@ tuning step and the level at the peak or at the cursor. Under it, a spectrum wit
 known bands, Wi-Fi channel numbers, the three BLE advertising channels and an optional peak hold,
 then a waterfall.
 
-{{< figure src="img/sdr-ui.png" alt="Three 160x144 screens of the console SDR application: the menu with band presets and settings, a band scan of the 2.4 GHz ISM band, and the spectrum view on the LTE band 7 downlink preset with an 80 MHz span" caption="Menu with band presets, a band scan of the 2.4 GHz ISM band, and the LTE B7 downlink preset at 80 MHz span." >}}
+{{< figure src="img/sdr-ui.png" alt="Three 160x144 screens of the console SDR application: the menu with band presets and settings, a band scan of the full 1792-2880 MHz range, and the spectrum and waterfall on the LTE band 3 downlink preset at 1842.5 MHz with an 80 MHz span" caption="Menu with band presets, a band scan of the full 1792-2880 MHz range, and the LTE B3 downlink preset at 1.8 GHz." >}}
 
 Select switches between three views: spectrum with waterfall, waterfall only, and a band scan that
 sweeps a range in 64 MHz steps with wide 80 MS/s captures, from the 2.4 GHz ISM band to the full
-2150-2880 MHz range in 12 steps. Left and Right tune (faster when held), Up and Down change the
+1792-2880 MHz range in 17 steps. Left and Right tune (faster when held), Up and Down change the
 tuning step from 10 kHz to 20 MHz, A changes the span between 16, 40 and 80 MHz, B brings up a
-cursor that A tunes to. The menu has band presets (Wi-Fi channels 1, 6 and 11, Bluetooth, and the
-LTE bands in range), gain, reference level, waterfall settings and help pages.
+cursor that A tunes to. The menu has band presets (Wi-Fi channels 1, 6 and 11, Bluetooth, DECT, and
+the LTE bands in range, from band 3 at 1.8 GHz to band 7 at 2.6 GHz), gain, reference level, waterfall settings and help pages.
 
 The RSSI tone is our favourite feature. It plays a tone through the speaker, with the pitch
 following the level at the cursor, so you can tune to an emitter and walk around the room to find
@@ -185,11 +202,11 @@ root cause is still open.
 
 ## Limits
 
-We want to be clear about what this is. It is a 2.4 GHz-centred receiver that sees roughly 2.1 to
+We want to be clear about what this is. It is a 2.4 GHz-centred receiver that sees roughly 1.75 to
 2.9 GHz in bursts of about 100 µs to 400 µs, with a duty cycle around 3% at 40 MS/s. It is good for
 watching Wi-Fi and Bluetooth activity, finding emitters, looking at band occupancy and LTE carriers
-in range. There is no broadcast FM, no ADS-B at 1090 MHz and no GPS at 1575 MHz: they are outside
-the VCO range, and we checked that no second-order or harmonic trick reaches them usefully. The
+in range. There is no broadcast FM, no ADS-B at 1090 MHz and no GPS at 1575 MHz: they are below
+even the 5/6 LO range, and we checked that no second-order or harmonic trick reaches them usefully. The
 console's own 24 MHz harmonics show up as spurs.
 
 Flashing ESP-SDR also replaces ModRetro's ESP32 firmware, so while it is installed the console has
@@ -228,7 +245,7 @@ the device string `soapy=0,driver=chromatic`. All the measurements, checks and d
 
 *The foundation of all this is [ESP-SDR](https://espargos.net/espsdr/) by
 [ESPARGOS](https://espargos.net/) (Florian Euchner, [esp-sdr](https://github.com/ESPARGOS/esp-sdr),
-GPL-3.0): the raw I/Q capture of the ESP32 radio, its firmware and protocol. ChromatiX adds the
+GPL-3.0): the raw I/Q capture of the ESP32 radio, its firmware and protocol. The 5/6 LO mode comes from h0m3us3r's [eSpDR](https://github.com/h0m3us3r/eSpDR). ChromatiX adds the
 Chromatic transport and tuning patch, the console application and the PC side. Thanks to
 [ModRetro](https://modretro.com/) for the open MCU and FPGA designs that made the QSPI link easy to
 reuse. Built on [LiteX](https://github.com/enjoy-digital/litex) and
