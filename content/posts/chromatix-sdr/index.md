@@ -2,8 +2,8 @@
 title: "ChromatiX SDR: a spectrum analyzer from the Chromatic's ESP32"
 date: 2026-10-05T08:30:00+02:00
 draft: false
-description: "ESPARGOS' ESP-SDR gets raw I/Q samples out of an ESP32's Wi-Fi radio. The ModRetro Chromatic has an ESP32 next to its FPGA, so we turned the console into a handheld 2.4 GHz spectrum analyzer: captures over the existing QSPI link into PSRAM, an FFT on a VexRiscv, a spectrum/waterfall UI on the LCD, tuning extended to 1792-2880 MHz, and a SoapySDR driver for gqrx and GNU Radio over USB."
-summary: "The Chromatic's ESP32 as an SDR: ESP-SDR on the radio side, the FPGA and a RISC-V on the console side, and a USB link to SoapySDR. How the samples move, how the tuning was pushed from the Wi-Fi channels to 1792-2880 MHz, and what the result can and cannot do."
+description: "ESPARGOS' ESP-SDR gets raw I/Q samples out of an ESP32's Wi-Fi radio. The ModRetro Chromatic has an ESP32 next to its FPGA, so we turned the console into a handheld 2.4 GHz spectrum analyzer: captures over the existing QSPI link into PSRAM, an FFT on a VexRiscv, a spectrum/waterfall UI on the LCD, tuning extended to 1775-2890 MHz, decoding tools (LTE cell scanner with MIB decoding, BLE scanner, signal identification, DECT, 802.15.4), and a SoapySDR driver for gqrx and GNU Radio over USB."
+summary: "The Chromatic's ESP32 as an SDR: ESP-SDR on the radio side, the FPGA and a RISC-V on the console side, and a USB link to SoapySDR. How the samples move, how the tuning was pushed from the Wi-Fi channels to 1775-2890 MHz, the decoding tools running on the softcore, and what the result can and cannot do."
 tags: ["litex", "fpga", "sdr", "esp32", "esp-sdr", "soapysdr", "gnuradio", "chromatix", "modretro"]
 categories: ["hardware"]
 showHero: false
@@ -17,7 +17,10 @@ undocumented debug path in Espressif's radios to capture raw I/Q samples from th
 small Chromatic patch, the captures travel over the console's existing QSPI link straight into
 PSRAM, and a VexRiscv computes the FFT and draws a spectrum, waterfall and band scan on the LCD
 at about 26 updates per second. We also pushed the tuning from the Wi-Fi channel frequencies to
-**1792-2880 MHz**, the last part thanks to a finding from the community. Over USB, the console relays the captures to the PC at 2.4 MB/s, and a SoapySDR
+**1775-2890 MHz**, partly thanks to a finding from the community. On top of the spectrum views,
+the console now decodes: an LTE cell scanner that finds carriers and decodes the cells' MIB, a
+BLE advertising scanner, a 2.4 GHz signal classifier, and DECT and 802.15.4 sniffers, all on the
+67 MHz softcore. Over USB, the console relays the captures to the PC at 2.4 MB/s, and a SoapySDR
 module makes it a source for gqrx, CubicSDR and GNU Radio. It is a burst receiver with a 2.4 GHz
 antenna, not a wideband SDR, and the post is clear about that too.*
 
@@ -118,8 +121,11 @@ entry per MHz from 2400 to 2484, where each entry holds the VCO capacitor code, 
 is 480 MHz × (2 + word/2^20), so any frequency above 960 MHz can be encoded) and a front-end tuning
 word. Loading one entry with the divider for the target frequency and a capacitor code close to
 the expected result, fitted from the calibration results, makes the calibration lock from
-**2150 to 2880 MHz**, repeatably, with the LO within 2 kHz. Below 2150 or above 2880 MHz the
-calibration never locks, whatever the starting point; that is the edge of the VCO's range.
+**2150 to 2880 MHz**, repeatably, with the LO within 2 kHz. To find the real edges, we then
+forced the VCO capacitor code by hand at each frequency and watched where the PLL locks: a window
+of 3 to 5 codes that slides from code 255 at **2130 MHz** to code 0 at **2890 MHz**. Past those,
+the capacitor bank simply has no more codes. With a better starting code, the calibration reaches
+both edges, and the table tuning now covers 2130 to 2890 MHz.
 
 The third step came from outside. h0m3us3r's
 [eSpDR](https://github.com/h0m3us3r/eSpDR), another ESP32 SDR project,
@@ -127,14 +133,14 @@ The third step came from outside. h0m3us3r's
 radio's clock generator (analog block 0x65, register 0, bit 4) that makes the receive LO
 **5/6 of the PLL frequency**. ESPARGOS then qualified it on the original ESP32 in
 [ESP-SDR](https://github.com/ESPARGOS/esp-sdr/commit/9cfc5e0) with a signal generator. Since our
-table tuning already places the PLL anywhere from 2150 to 2880 MHz, combining the two was direct:
+table tuning already places the PLL anywhere from 2130 to 2890 MHz, combining the two was direct:
 below 2150 MHz, the firmware tunes the PLL to 6/5 of the requested frequency (calibrating in the
-normal mode), then sets the selector once the receive path is configured. That extends the range
-down to **1792 MHz**, with the LO within 1 to 4 kHz of the request across 1793-2147 MHz. The
-console now tunes **1792 to 2880 MHz** in 1 kHz steps.
+normal mode), then sets the selector once the receive path is configured. With the PLL starting
+at 2130 MHz, that extends the range down to **1775 MHz**, with the LO within 1 to 4 kHz of the
+request across the 5/6 range. The console now tunes **1775 to 2890 MHz** in 1 kHz steps.
 
 On top of that, opening the receiver's low-pass filter at 80 MS/s gives a usable view of about
-±38 MHz around the LO. The console and the PC can see roughly 1754 to 2918 MHz.
+±38 MHz around the LO. The console and the PC can see roughly 1737 to 2928 MHz.
 
 With the antenna and LNA matched for 2.4 GHz, sensitivity outside the ISM band is lower. Real
 signals still come through: a 15 MHz LTE band 3 downlink carrier at 1845-1860 MHz, the mobile
@@ -145,8 +151,18 @@ each seen at several LO settings so they are not images.
 
 {{< figure src="img/sdr_host_1842_80msps.png" alt="Host spectrum plot at 80 MS/s centred on 1842 MHz, showing crystal harmonic lines and a 15 MHz block-shaped LTE carrier between 1845 and 1860 MHz" caption="At the other end, with the 5/6 LO mode: a 15 MHz LTE band 3 downlink carrier at 1845-1860 MHz." >}}
 
-Our ESP32 firmware is ESP-SDR pinned to a specific upstream commit, plus a small patch and two
-source files (the QSPI transport and the tuning), all applied by `firmware/esp32-sdr/build.sh`. The
+We also looked for more and found nothing, which is worth writing down. Flipping every bit of
+the clock generator block and measuring the LO ratio each time shows that 5/6 is the only other
+divider: the remaining bits either stop the receive path or do nothing. We mapped the other analog
+blocks the same way without finding a frequency doubler, and with 5 GHz access points nearby,
+no LO harmonic picked up anything at 5.2 or 5.5 GHz. The original ESP32 is a 2.4 GHz-only chip,
+front-end included. The ESP32 SDR projects that reach 5.8 GHz, like
+[ESPsoup](https://github.com/pit711/ESPsoup) and [C5VRX](https://github.com/KonradIT/C5VRX), run on
+the dual-band ESP32-C5; on the Chromatic, that would mean an ESP32-C5 on a cartridge PCB streaming
+to the FPGA, or a downconverter in front of the antenna.
+
+Our ESP32 firmware is ESP-SDR pinned to a specific upstream commit, plus a small patch and three
+source files (the QSPI transport, the tuning and a capture delay we come back to below), all applied by `firmware/esp32-sdr/build.sh`. The
 protocol is unchanged, so the same firmware still works as a stock ESP-SDR with ESPARGOS' viewers. We plan to propose the table tuning to ESP-SDR upstream, since
 every original-ESP32 user would benefit from it, not only the Chromatic. The 5/6 mode shows how
 well this works in the other direction: found in eSpDR, qualified in ESP-SDR, and in our firmware
@@ -159,11 +175,11 @@ tuning step and the level at the peak or at the cursor. Under it, a spectrum wit
 known bands, Wi-Fi channel numbers, the three BLE advertising channels and an optional peak hold,
 then a waterfall.
 
-{{< figure src="img/sdr-ui.png" alt="Three 160x144 screens of the console SDR application: the menu with band presets and settings, a band scan of the full 1792-2880 MHz range, and the spectrum and waterfall on the LTE band 3 downlink preset at 1842.5 MHz with an 80 MHz span" caption="Menu with band presets, a band scan of the full 1792-2880 MHz range, and the LTE B3 downlink preset at 1.8 GHz." >}}
+{{< figure src="img/sdr-ui.png" alt="Three 160x144 screens of the console SDR application: the menu with band presets and settings, a band scan of the full tuning range, and the spectrum and waterfall on the LTE band 3 downlink preset at 1842.5 MHz with an 80 MHz span" caption="Menu with band presets, a band scan of the full tuning range, and the LTE B3 downlink preset at 1.8 GHz." >}}
 
 Select switches between three views: spectrum with waterfall, waterfall only, and a band scan that
 sweeps a range in 64 MHz steps with wide 80 MS/s captures, from the 2.4 GHz ISM band to the full
-1792-2880 MHz range in 17 steps. Left and Right tune (faster when held), Up and Down change the
+1775-2890 MHz range in 18 steps. Left and Right tune (faster when held), Up and Down change the
 tuning step from 10 kHz to 20 MHz, A changes the span between 16, 40 and 80 MHz, B brings up a
 cursor that A tunes to. The menu has band presets (Wi-Fi channels 1, 6 and 11, Bluetooth, DECT, and
 the LTE bands in range, from band 3 at 1.8 GHz to band 7 at 2.6 GHz), gain, reference level, waterfall settings and help pages.
@@ -171,6 +187,72 @@ the LTE bands in range, from band 3 at 1.8 GHz to band 7 at 2.6 GHz), gain, refe
 The RSSI tone is our favourite feature. It plays a tone through the speaker, with the pitch
 following the level at the cursor, so you can tune to an emitter and walk around the room to find
 it without looking at the screen.
+
+## From spectrum to decoding
+
+A spectrum shows that something is there; the next question is what. So the menu gained a TOOL
+entry that replaces the spectrum views with a dedicated tool, each with its own help page. They
+share the radio, display and button services of the application, and their DSP is plain C with no
+hardware dependency: `test/test_sdr_dsp.py` builds it on the PC and checks it against synthetic
+ESP32 captures, with the same 8-bit samples, inverted spectrum, noise and frequency offsets as the
+real receiver. Each decoder was right on synthetic data before it ever ran on the console.
+
+{{< figure src="img/sdr_tool_cell.png" alt="Cell scanner screen: the LTE band 7 downlink spectrum from 2620 to 2690 MHz with detected carriers marked, a table of carriers with frequency, bandwidth, PCI, mode, PSS score and EARFCN, the 2680 MHz carrier decoded as PCI 388 FDD, and a status line reading MIB PCI 388: 100 RB, 2 TX, SFN 614, LO error +3.2 ppm" caption="The cell scanner on LTE band 7: four carriers found, the 20 MHz one at 2680 MHz decoded down to its MIB." >}}
+
+The **cell scanner** is the most involved. It sweeps an LTE band with wide 80 MS/s captures and
+finds the carriers: bins above the noise floor are clustered and matched against the LTE
+bandwidths (a lightly loaded carrier is not flat, only its reference signals fill the unused
+resource blocks, so the clustering has to bridge gaps). For each carrier it then takes 1 ms
+captures at 16 MS/s, channelizes them down to the 1.92 MS/s of the LTE synchronization signals and
+looks for a cell. The primary sync signal (PSS) is found by FFT correlation and gives the timing
+and a first frequency offset; the secondary one (SSS) gives the physical cell ID (PCI) and whether
+the cell is FDD or TDD. Then comes the MIB, the small block every LTE cell broadcasts on its
+physical broadcast channel (PBCH) with its bandwidth and frame number: channel estimation from the
+cell's reference signals for one or two antenna ports, Alamouti transmit diversity, descrambling,
+rate dematching, a tail-biting Viterbi decoder and the CRC, whose mask also gives the number of
+transmit antennas. On band 7 here, it decodes PCI 388, FDD, 100 resource blocks (20 MHz), two
+transmit antennas and a consistent frame number, and it measures the console ESP32's own crystal
+error at about +3 ppm as a side effect. A capture takes about 210 ms of processing on the
+VexRiscv.
+
+The MIB took a fix on the ESP32 side. The PSS is sent every 5 ms and the PBCH follows 0.35 ms after
+it in one out of two, so a 1 ms capture needs the right phase. ESP-SDR handles commands on the
+1 ms FreeRTOS tick, so every capture started on the same 1 ms grid of the ESP32's clock: against
+the LTE frame, the PSS was always about 0.8 ms in and the PBCH never fit. Our firmware adds a
+`CAPDLY` command, a random delay of up to 1 ms before each capture, and the captures now land
+everywhere in the frame: 16 MIBs out of 47 cell detections on real band 7 captures.
+
+{{< figure src="img/sdr-tools.png" alt="Four 160x144 tool screens: the BLE scanner listing an Apple iBeacon, an Apple Nearby device and an HP device with levels and packet counts; the signal identification spectrogram of the 2.4 GHz band with a list of classified bursts (carrier, narrowband, BLE advertising, Wi-Fi 40 MHz, Wi-Fi); the Wi-Fi channel airtime view recommending channel 6; and the hunt tool showing a large channel power reading in dB with a peak hold bar and a history plot" caption="BLE scanner, signal identification, Wi-Fi channel airtime and the hunt tool." >}}
+
+The other tools, briefly:
+
+- **BLE scanner.** Hops over the three advertising channels with 1 ms captures (a whole
+  advertising packet fits), demodulates the GFSK with an FM discriminator, searches the access
+  address and checks the CRC. It lists devices with names, vendors and Apple Continuity types,
+  flags trackers (Find My, SmartTag, Tile, Chipolo) and has a find mode that beeps on each packet
+  of the selected device. A capture covers about 1% of the air time, so devices show up over tens
+  of seconds rather than instantly.
+- **Signal identification.** Captures the whole 2.4 GHz band in two 80 MS/s halves, builds a
+  spectrogram with 1.6 µs time cells, and classifies the bursts by bandwidth, duration and channel:
+  Wi-Fi 20/40 MHz, BLE advertising, 802.15.4, narrowband links, carriers, and the signatures of
+  drone video links, DJI DroneID, analog video and microwave ovens. A drone alert requires long
+  bursts seen twice in 10 s. The Wi-Fi classes are checked on the air; the drone classes are
+  heuristics we have not been able to test against a real drone. A second view shows the airtime
+  per Wi-Fi channel and the least busy of 1, 6 and 11.
+- **DECT scanner and 802.15.4 sniffer.** Decode DECT base station identities from their beacons
+  (control part only, no voice), and 802.15.4 frames up to the MAC header (PAN IDs, Zigbee/6LoWPAN,
+  addresses). There is no DECT base or Zigbee network in our lab, so these two are verified on
+  synthetic captures only.
+- **Hunt.** Channel power in a 100 kHz to 10 MHz bandwidth anywhere in the tuning range, with an
+  auto-ranged gain correction, peak hold, history and the RSSI tone: the tool for finding an
+  interferer or pointing the console at a transmitter.
+
+Getting this to run on a 67 MHz rv32im with an 8 KB direct-mapped data cache took some care. Real
+and imaginary parts in separate arrays a multiple of 8 KB apart evicted each other on every access,
+ten times slower; the DSP now uses interleaved complex samples and offsets the buffers it uses
+together. Compiling the DSP with `-O3 -funroll-loops` instead of `-Os` took the BLE decode from
+192 ms to 71 ms, because the unrolled loops hide the load and multiply latencies. And nothing uses
+64-bit products: the FFT builds its 32x16-bit products from 32-bit multiplies.
 
 ## On the PC
 
@@ -202,12 +284,17 @@ root cause is still open.
 
 ## Limits
 
-We want to be clear about what this is. It is a 2.4 GHz-centred receiver that sees roughly 1.75 to
-2.9 GHz in bursts of about 100 µs to 400 µs, with a duty cycle around 3% at 40 MS/s. It is good for
-watching Wi-Fi and Bluetooth activity, finding emitters, looking at band occupancy and LTE carriers
-in range. There is no broadcast FM, no ADS-B at 1090 MHz and no GPS at 1575 MHz: they are below
+We want to be clear about what this is. It is a 2.4 GHz-centred receiver that sees roughly 1.74 to
+2.93 GHz in bursts of 0.2 to 1 ms, with a duty cycle of a few percent. It is good for watching
+Wi-Fi and Bluetooth activity, finding emitters, looking at band occupancy, and identifying LTE
+cells, BLE devices and 2.4 GHz signals in range. There is no broadcast FM, no ADS-B at 1090 MHz and no GPS at 1575 MHz: they are below
 even the 5/6 LO range, and we checked that no second-order or harmonic trick reaches them usefully. The
 console's own 24 MHz harmonics show up as spurs.
+
+The tools share the same limit: they sample the air rather than watch it. Captures are 1 ms long at
+16 MS/s and a few per second, long 802.15.4 frames and full DECT frames do not fit in one, and only
+the unencrypted headers are decoded (LTE synchronization and MIB, BLE advertising, the DECT control
+part, the 802.15.4 MAC header). UMTS carriers are found but not decoded.
 
 Flashing ESP-SDR also replaces ModRetro's ESP32 firmware, so while it is installed the console has
 no menu, OSD, settings or power management. Back up the ESP32 flash first (the command is below)
