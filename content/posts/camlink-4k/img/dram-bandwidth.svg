@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 360" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .t    { fill:#2EAADC; font-size:16px; font-weight:700; }
+      .s    { fill:#8e96a2; font-size:12px; }
+      .lbl  { fill:#e6e8e3; font-size:13px; font-weight:700; }
+      .sub  { fill:#8e96a2; font-size:11px; }
+      .val  { fill:#e6e8e3; font-size:13px; font-weight:700; }
+      .grid { stroke:#2a313b; stroke-width:1; }
+      .ax   { fill:#8e96a2; font-size:11px; }
+      .ref  { stroke:#e6e8e3; stroke-width:1.5; stroke-dasharray:5 4; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="980" height="360" fill="#0f1218"/>
+  <text class="t" x="40" y="36">ECP5 DDR3 on the Cam Link 4K: concurrent write + read bandwidth</text>
+  <text class="s" x="40" y="56">LiteDRAM BIST, writer and checker on separate ports (frame buffer traffic), MB/s</text>
+
+  <!-- grid: x = 340 + v * 0.42 -->
+  <line class="grid" x1="340" y1="80" x2="340" y2="290"/>
+  <line class="grid" x1="550" y1="80" x2="550" y2="290"/>
+  <line class="grid" x1="760" y1="80" x2="760" y2="290"/>
+  <text class="ax" x="340" y="308" text-anchor="middle">0</text>
+  <text class="ax" x="550" y="308" text-anchor="middle">500</text>
+  <text class="ax" x="760" y="308" text-anchor="middle">1000</text>
+
+  <!-- 1:2 DDR3-300 -->
+  <text class="lbl" x="40" y="112">1:2 · DDR3-300</text>
+  <text class="sub" x="40" y="128">previous PHY mode (sys 75 MHz)</text>
+  <rect x="340" y="98" width="165.9" height="32" rx="4" fill="#5d6673"/>
+  <text class="val" x="514" y="119">395</text>
+
+  <!-- 1:4 DDR3-594 -->
+  <text class="lbl" x="40" y="174">1:4 · DDR3-594</text>
+  <text class="sub" x="40" y="190">frame buffer build (sys 74.25 MHz)</text>
+  <rect x="340" y="160" width="361.6" height="32" rx="4" fill="#2493c0"/>
+  <text class="val" x="710" y="181">861</text>
+
+  <!-- 1:4 DDR3-700 -->
+  <text class="lbl" x="40" y="236">1:4 · DDR3-700</text>
+  <text class="sub" x="40" y="252">BIST only (sys 87.75 MHz)</text>
+  <rect x="340" y="222" width="430.1" height="32" rx="4" fill="#2493c0"/>
+  <text class="val" x="779" y="243">1024</text>
+
+  <!-- need: 746 MB/s -->
+  <line class="ref" x1="653.3" y1="80" x2="653.3" y2="290"/>
+  <text class="sub" x="659" y="90">4K30 NV12 frame buffer: ~746 MB/s</text>
+
+  <text class="s" x="40" y="338">1:2 = DRAM clock at 2x the controller clock, 1:4 = 4x (LiteDRAM #408/#409/#410)</text>
+</svg>
