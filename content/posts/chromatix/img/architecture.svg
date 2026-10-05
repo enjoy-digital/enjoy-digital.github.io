@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 570" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .t     { fill:#ffffff; font-size:16px; font-weight:700; }
+      .lbl   { fill:#cfd2cc; font-size:13px; font-weight:700; }
+      .sub   { fill:#8e96a2; font-size:11px; }
+      .ext   { fill:#cfd2cc; font-size:12.5px; }
+      .up    { fill:#102a33; stroke:#22d3ee; stroke-width:2.5; }
+      .uptxt { fill:#67e8f9; font-size:13px; font-weight:700; }
+      .box   { fill:#1c2129; stroke:#2EAADC; stroke-width:1.8; }
+      .vlog  { fill:#1c2129; stroke:#8e96a2; stroke-width:1.8; stroke-dasharray:6 4; }
+      .big   { fill:#161b22; stroke:#2EAADC; stroke-width:2.5; }
+      .w     { fill:none; stroke:#2EAADC; stroke-width:2; marker-end:url(#a); }
+      .w2    { fill:none; stroke:#2EAADC; stroke-width:2; marker-end:url(#a); marker-start:url(#as); }
+    </style>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2EAADC"/></marker>
+    <marker id="as" markerWidth="9" markerHeight="9" refX="0" refY="3" orient="auto"><path d="M7,0 L0,3 L7,6 Z" fill="#2EAADC"/></marker>
+  </defs>
+
+  <rect x="0" y="0" width="980" height="570" fill="#0f1218"/>
+  <text class="t" x="490" y="32" text-anchor="middle" fill="#2EAADC">ChromatiX: the Chromatic FPGA as a LiteX design</text>
+  
+
+  <!-- FPGA -->
+  <rect class="big" x="130" y="92" width="720" height="385" rx="12"/>
+  <text class="t" x="150" y="118">Gowin GW5A-25 · chromatix.py</text>
+
+  <!-- GB core -->
+  <rect class="vlog" x="160" y="140" width="190" height="70" rx="9"/>
+  <text class="lbl" x="255" y="168" text-anchor="middle">Game Boy core</text>
+  <text class="sub" x="255" y="188" text-anchor="middle">MiSTer, Verilog</text>
+
+  <!-- Memory -->
+  <rect class="up" x="395" y="140" width="200" height="70" rx="9"/>
+  <text class="uptxt" x="495" y="164" text-anchor="middle">OPI PSRAM core</text>
+  <text class="sub" x="495" y="182" text-anchor="middle">arbiter · BIST · burst</text>
+  <text class="sub" x="495" y="197" text-anchor="middle">writers/readers</text>
+
+  <!-- Video -->
+  <rect class="box" x="640" y="140" width="185" height="70" rx="9"/>
+  <text class="lbl" x="732" y="164" text-anchor="middle">Video pipeline</text>
+  <text class="sub" x="732" y="182" text-anchor="middle">blend · OSD · colour</text>
+  <text class="sub" x="732" y="197" text-anchor="middle">ST7785 panel timing</text>
+
+  <!-- QSPI / sysmon -->
+  <rect class="box" x="395" y="255" width="200" height="60" rx="9"/>
+  <text class="lbl" x="495" y="280" text-anchor="middle">QSPI slave</text>
+  <text class="sub" x="495" y="298" text-anchor="middle">system monitor (UART)</text>
+
+  <!-- USB -->
+  <rect class="box" x="640" y="255" width="185" height="60" rx="9"/>
+  <text class="lbl" x="732" y="280" text-anchor="middle">UVC · UAC · CDC</text>
+  <text class="sub" x="732" y="298" text-anchor="middle">Migen class logic</text>
+  <rect class="box" x="640" y="330" width="185" height="50" rx="9"/>
+  <text class="lbl" x="732" y="352" text-anchor="middle">LUNA device</text>
+  <text class="sub" x="732" y="368" text-anchor="middle">Amaranth → Verilog</text>
+  <rect class="up" x="640" y="395" width="185" height="55" rx="9"/>
+  <text class="uptxt" x="732" y="418" text-anchor="middle">USB2PHY</text>
+  <text class="sub" x="732" y="436" text-anchor="middle">UTMI · HS/FS · GW5A SerDes</text>
+
+  <!-- Audio -->
+  <rect class="box" x="160" y="255" width="190" height="60" rx="9"/>
+  <text class="lbl" x="255" y="280" text-anchor="middle">I2S · LiteI2C</text>
+  <text class="sub" x="255" y="298" text-anchor="middle">codec/PMIC init, polling</text>
+
+  <!-- Infra -->
+  <rect class="box" x="160" y="340" width="435" height="50" rx="9"/>
+  <text class="lbl" x="377" y="362" text-anchor="middle">SoCMini · CSRs · UARTBone debug bridge</text>
+  <text class="sub" x="377" y="379" text-anchor="middle">virtual buttons · virtual cartridge · whole PSRAM from the host</text>
+  <rect class="up" x="160" y="405" width="435" height="45" rx="9"/>
+  <text class="uptxt" x="377" y="426" text-anchor="middle">GW5A SerDes / IODELAY specials · PLL constraints</text>
+  <text class="sub" x="377" y="442" text-anchor="middle">CRG: 2x GW5APLL · buttons · battery ADC</text>
+
+  <!-- legend -->
+  <rect class="up" x="160" y="534" width="22" height="16" rx="4"/>
+  <text class="sub" x="190" y="546">upstreamed to LiteX during the project</text>
+  <rect class="box" x="450" y="534" width="22" height="16" rx="4"/>
+  <text class="sub" x="480" y="546">LiteX/Migen in ChromatiX</text>
+  <rect class="vlog" x="660" y="534" width="22" height="16" rx="4"/>
+  <text class="sub" x="690" y="546">kept in Verilog</text>
+
+  <!-- internal arrows -->
+  <line class="w" x1="350" y1="175" x2="390" y2="175"/>
+  <line class="w" x1="595" y1="175" x2="635" y2="175"/>
+  <line class="w" x1="495" y1="255" x2="495" y2="215"/>
+  <line class="w" x1="732" y1="210" x2="732" y2="250"/>
+  <line class="w2" x1="732" y1="315" x2="732" y2="330"/>
+  <line class="w2" x1="732" y1="380" x2="732" y2="395"/>
+  <line class="w" x1="255" y1="210" x2="255" y2="250"/>
+
+  <!-- externals -->
+  <text class="ext" x="20" y="170">Cartridge</text>
+  <line class="w2" x1="98" y1="175" x2="156" y2="175"/>
+  <text class="ext" x="20" y="285">Codec</text>
+  <line class="w2" x1="70" y1="290" x2="156" y2="290"/>
+  
+  
+  <text class="ext" x="868" y="170">LCD</text>
+  <line class="w" x1="825" y1="165" x2="862" y2="165"/>
+  <text class="ext" x="868" y="418">USB-C</text>
+  <text class="sub" x="868" y="434">+ GWU2X JTAG</text>
+  <line class="w2" x1="825" y1="413" x2="862" y2="413"/>
+  
+  
+
+  <!-- PSRAM chip above, ESP32 below -->
+  <text class="ext" x="610" y="62">PSRAM · 8 MB x8 OPI</text>
+  <line class="w2" x1="560" y1="66" x2="560" y2="136"/>
+  <text class="ext" x="630" y="510">ESP32 · menu, OSD</text>
+  <path class="w2" d="M617,504 V285 H599"/>
+</svg>
