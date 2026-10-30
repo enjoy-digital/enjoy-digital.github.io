@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 440" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .t    { fill:#2EAADC; font-size:16px; font-weight:700; }
+      .s    { fill:#8e96a2; font-size:12px; }
+      .h    { fill:#e6e8e3; font-size:13.5px; font-weight:700; }
+      .b    { fill:#e6e8e3; font-size:12px; font-weight:700; }
+      .sub  { fill:#c9ced6; font-size:10.5px; }
+      .note { fill:#8e96a2; font-size:11px; }
+      .ar   { stroke:#8e96a2; stroke-width:1.5; fill:none; marker-end:url(#a); }
+    </style>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8e96a2"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="980" height="440" fill="#0f1218"/>
+  <text class="t" x="40" y="36">Same USB3 stack, two clocking plans (Gen 1, 5Gbps)</text>
+  <text class="s" x="40" y="56">The Gowin build splits the design: the PIPE keeps the line rate, everything above runs at half speed</text>
+
+  <!-- Xilinx row -->
+  <text class="h" x="40" y="100">Artix7 / UltraScale+ (Vivado)</text>
+  <rect x="40" y="114" width="900" height="96" rx="8" fill="#13202a" stroke="#2493c0" stroke-dasharray="4 3"/>
+  <text class="note" x="54" y="132">sys: 125MHz, 32-bit words, one clock domain above the transceiver</text>
+  <rect x="60"  y="144" width="150" height="50" rx="6" fill="#2a313b"/>
+  <text class="b" x="74" y="166">GTP/GTY</text><text class="sub" x="74" y="182">250MHz 20-bit</text>
+  <rect x="250" y="144" width="150" height="50" rx="6" fill="#2493c0"/>
+  <text class="b" x="264" y="166">PIPE</text><text class="sub" x="264" y="182">32-bit</text>
+  <rect x="440" y="144" width="150" height="50" rx="6" fill="#2493c0"/>
+  <text class="b" x="454" y="166">LTSSM</text><text class="sub" x="454" y="182">all states</text>
+  <rect x="630" y="144" width="150" height="50" rx="6" fill="#2493c0"/>
+  <text class="b" x="644" y="166">Link + Core</text><text class="sub" x="644" y="182">32-bit, U1/U2</text>
+  <rect x="820" y="144" width="100" height="50" rx="6" fill="#2493c0"/>
+  <text class="b" x="834" y="166">App</text><text class="sub" x="834" y="182">32-bit</text>
+  <path class="ar" d="M210,169 L246,169"/><path class="ar" d="M400,169 L436,169"/>
+  <path class="ar" d="M590,169 L626,169"/><path class="ar" d="M780,169 L816,169"/>
+
+  <!-- Gowin row -->
+  <text class="h" x="40" y="252">Gowin GW5A (Gowin IDE)</text>
+  <rect x="40" y="266" width="355" height="110" rx="8" fill="#1f1a10" stroke="#d9a441" stroke-dasharray="4 3"/>
+  <text class="note" x="54" y="284">tx: 125MHz, GTR12 TX fabric clock</text>
+  <rect x="405" y="266" width="535" height="110" rx="8" fill="#13202a" stroke="#2493c0" stroke-dasharray="4 3"/>
+  <text class="note" x="419" y="284">sys: 62.5MHz, 64-bit words</text>
+  <rect x="60"  y="298" width="150" height="56" rx="6" fill="#2a313b"/>
+  <text class="b" x="74" y="321">GTR12</text><text class="sub" x="74" y="338">fabric 8b/10b</text>
+  <rect x="230" y="298" width="150" height="56" rx="6" fill="#b5852e"/>
+  <text class="b" x="244" y="321">PIPE</text><text class="sub" x="244" y="338">direct scrambler</text>
+  <rect x="440" y="298" width="140" height="56" rx="6" fill="#2493c0"/>
+  <text class="b" x="454" y="321">LTSSM</text><text class="sub" x="454" y="338">no U1/U2</text>
+  <rect x="610" y="298" width="170" height="56" rx="6" fill="#2493c0"/>
+  <text class="b" x="624" y="321">Link + Core</text><text class="sub" x="624" y="338">credits throttle RX</text>
+  <rect x="810" y="298" width="110" height="56" rx="6" fill="#2493c0"/>
+  <text class="b" x="824" y="321">App</text><text class="sub" x="824" y="338">64-bit</text>
+  <path class="ar" d="M210,326 L226,326"/><path class="ar" d="M380,326 L436,326"/>
+  <path class="ar" d="M580,326 L606,326"/><path class="ar" d="M780,326 L806,326"/>
+  <text class="note" x="384" y="394">CDC: deep RX FIFO, TX packets stored and forwarded (SKP only between packets)</text>
+  <text class="note" x="40" y="420">Measured: Acorn IN/OUT 446/449 MB/s; Tang Mega 138K Pro IN/OUT 372/433 MB/s, both 0 errors.</text>
+</svg>

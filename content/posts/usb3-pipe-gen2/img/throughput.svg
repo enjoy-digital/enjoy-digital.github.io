@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 420" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .t    { fill:#2EAADC; font-size:16px; font-weight:700; }
+      .s    { fill:#8e96a2; font-size:12px; }
+      .lbl  { fill:#e6e8e3; font-size:12.5px; font-weight:700; }
+      .sub  { fill:#8e96a2; font-size:11px; }
+      .val  { fill:#e6e8e3; font-size:12px; font-weight:700; }
+      .grid { stroke:#2a313b; stroke-width:1; }
+      .ax   { fill:#8e96a2; font-size:11px; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="980" height="420" fill="#0f1218"/>
+  <text class="t" x="40" y="36">USB3-PIPE Bulk throughput, measured on hardware</text>
+  <text class="s" x="40" y="56">MB/s, 64KB transfers, data checked, Linux xHCI host</text>
+
+  <!-- legend -->
+  <rect x="700" y="72" width="16" height="12" rx="3" fill="#5d6673"/>
+  <text class="s" x="722" y="83">Bulk IN</text>
+  <rect x="810" y="72" width="16" height="12" rx="3" fill="#2493c0"/>
+  <text class="s" x="832" y="83">Bulk OUT</text>
+
+  <!-- y: 0..1000 MB/s over y=330..100 (0.23 px per MB/s) -->
+  <line class="grid" x1="90" y1="330" x2="940" y2="330"/>
+  <line class="grid" x1="90" y1="272.5" x2="940" y2="272.5"/>
+  <line class="grid" x1="90" y1="215" x2="940" y2="215"/>
+  <line class="grid" x1="90" y1="157.5" x2="940" y2="157.5"/>
+  <line class="grid" x1="90" y1="100" x2="940" y2="100"/>
+  <text class="ax" x="80" y="334" text-anchor="end">0</text>
+  <text class="ax" x="80" y="276" text-anchor="end">250</text>
+  <text class="ax" x="80" y="219" text-anchor="end">500</text>
+  <text class="ax" x="80" y="161" text-anchor="end">750</text>
+  <text class="ax" x="80" y="104" text-anchor="end">1000</text>
+
+  <!-- Gen 1 Acorn: 446 / 449 -->
+  <rect x="140" y="227.4" width="70" height="102.6" rx="4" fill="#5d6673"/>
+  <rect x="214" y="226.7" width="70" height="103.3" rx="4" fill="#2493c0"/>
+  <text class="val" x="175" y="220" text-anchor="middle">446</text>
+  <text class="val" x="249" y="219" text-anchor="middle">449</text>
+  <text class="lbl" x="212" y="354" text-anchor="middle">Gen 1, Acorn</text>
+  <text class="sub" x="212" y="372" text-anchor="middle">GTP, 32-bit link</text>
+
+  <!-- Gen 2 32-bit: 426 / 466 -->
+  <rect x="345" y="232" width="70" height="98" rx="4" fill="#5d6673"/>
+  <rect x="419" y="222.8" width="70" height="107.2" rx="4" fill="#2493c0"/>
+  <text class="val" x="380" y="225" text-anchor="middle">426</text>
+  <text class="val" x="454" y="215" text-anchor="middle">466</text>
+  <text class="lbl" x="417" y="354" text-anchor="middle">Gen 2, XCKU3P</text>
+  <text class="sub" x="417" y="372" text-anchor="middle">GTY, 32-bit link</text>
+
+  <!-- Gen 2 64-bit: 744 / 881 -->
+  <rect x="550" y="158.9" width="70" height="171.1" rx="4" fill="#5d6673"/>
+  <rect x="624" y="127.4" width="70" height="202.6" rx="4" fill="#2493c0"/>
+  <text class="val" x="585" y="152" text-anchor="middle">744</text>
+  <text class="val" x="659" y="120" text-anchor="middle">881</text>
+  <text class="lbl" x="622" y="354" text-anchor="middle">Gen 2, XCKU3P</text>
+  <text class="sub" x="622" y="372" text-anchor="middle">GTY, 64-bit link</text>
+
+  <!-- Gen 2 64-bit MaxBurst 16: 785 / 873 -->
+  <rect x="755" y="149.5" width="70" height="180.5" rx="4" fill="#5d6673"/>
+  <rect x="829" y="129.2" width="70" height="200.8" rx="4" fill="#2493c0"/>
+  <text class="val" x="790" y="143" text-anchor="middle">785</text>
+  <text class="val" x="864" y="122" text-anchor="middle">873</text>
+  <text class="lbl" x="827" y="354" text-anchor="middle">Gen 2, XCKU3P</text>
+  <text class="sub" x="827" y="372" text-anchor="middle">64-bit, MaxBurst 16</text>
+
+  <text class="sub" x="40" y="404">Line payload ceilings: ~500 MB/s at 5Gbps (8b/10b), ~1.2 GB/s at 10Gbps (128b/132b).</text>
+</svg>

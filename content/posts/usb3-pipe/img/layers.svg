@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 520" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .t    { fill:#2EAADC; font-size:16px; font-weight:700; }
+      .s    { fill:#8e96a2; font-size:12px; }
+      .h    { fill:#e6e8e3; font-size:13px; font-weight:700; }
+      .lbl  { fill:#e6e8e3; font-size:13px; font-weight:700; }
+      .sub  { fill:#8e96a2; font-size:11px; }
+      .cell { fill:#e6e8e3; font-size:11.5px; }
+      .dim  { fill:#8e96a2; font-size:11.5px; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="980" height="520" fill="#0f1218"/>
+  <text class="t" x="40" y="36">USB3-PIPE: what existed in 2019, what exists in 2026</text>
+  <text class="s" x="40" y="56">From the USB3 connector (bottom) to the device classes (top), Gen 1x1 (5Gbps)</text>
+
+  <!-- legend -->
+  <rect x="520" y="70" width="16" height="12" rx="3" fill="#2493c0"/>
+  <text class="s" x="542" y="81">done, ours</text>
+  <rect x="640" y="70" width="16" height="12" rx="3" fill="#5d6673"/>
+  <text class="s" x="662" y="81">partial / third-party</text>
+  <rect x="860" y="70" width="16" height="12" rx="3" fill="#1d232c" stroke="#3a424e"/>
+  <text class="s" x="882" y="81">missing</text>
+
+  <text class="h" x="415" y="112">2019 / 2020</text>
+  <text class="h" x="700" y="112">October 2026</text>
+
+  <!-- rows: y step 54, from top (classes) to bottom (transceiver) -->
+  <!-- Device classes -->
+  <text class="lbl" x="40" y="142">Device classes</text>
+  <text class="sub" x="40" y="158">what Linux binds to</text>
+  <rect x="300" y="126" width="270" height="40" rx="6" fill="#1d232c" stroke="#3a424e"/>
+  <text class="dim" x="314" y="150">none</text>
+  <rect x="590" y="126" width="350" height="40" rx="6" fill="#2493c0"/>
+  <text class="cell" x="604" y="150">CDC-ACM, UVC (Bulk/Iso), MSC, composite</text>
+
+  <!-- Endpoints -->
+  <text class="lbl" x="40" y="196">Endpoints</text>
+  <text class="sub" x="40" y="212">Control, Bulk, Iso</text>
+  <rect x="300" y="180" width="270" height="40" rx="6" fill="#5d6673"/>
+  <text class="cell" x="314" y="204">Daisho (Verilog), EP0 + Bulk</text>
+  <rect x="590" y="180" width="350" height="40" rx="6" fill="#2493c0"/>
+  <text class="cell" x="604" y="204">EP0 + requests, Bulk bursts, Iso IN</text>
+
+  <!-- Protocol -->
+  <text class="lbl" x="40" y="250">Protocol Layer</text>
+  <text class="sub" x="40" y="266">TPs, DPs, flow control</text>
+  <rect x="300" y="234" width="270" height="40" rx="6" fill="#5d6673"/>
+  <text class="cell" x="314" y="258">Daisho, customized</text>
+  <rect x="590" y="234" width="350" height="40" rx="6" fill="#2493c0"/>
+  <text class="cell" x="604" y="258">native Migen/LiteX, ERDY/NRDY, bursts</text>
+
+  <!-- Link -->
+  <text class="lbl" x="40" y="304">Link Layer</text>
+  <text class="sub" x="40" y="320">headers, retries, LMPs</text>
+  <rect x="300" y="288" width="270" height="40" rx="6" fill="#5d6673"/>
+  <text class="cell" x="314" y="312">Daisho, customized</text>
+  <rect x="590" y="288" width="350" height="40" rx="6" fill="#2493c0"/>
+  <text class="cell" x="604" y="312">native, credits, retries, U1/U2 LPM</text>
+
+  <!-- LTSSM -->
+  <text class="lbl" x="40" y="358">LTSSM</text>
+  <text class="sub" x="40" y="374">link training/power</text>
+  <rect x="300" y="342" width="270" height="40" rx="6" fill="#5d6673"/>
+  <text class="cell" x="314" y="366">Polling to U0 only</text>
+  <rect x="590" y="342" width="350" height="40" rx="6" fill="#2493c0"/>
+  <text class="cell" x="604" y="366">all states: Recovery, U1-U3, resets, ...</text>
+
+  <!-- PIPE -->
+  <text class="lbl" x="40" y="412">PIPE</text>
+  <text class="sub" x="40" y="428">LFPS, TS, 8b/10b, SKP</text>
+  <rect x="300" y="396" width="270" height="40" rx="6" fill="#2493c0"/>
+  <text class="cell" x="314" y="420">Polling LFPS, TS, scrambling</text>
+  <rect x="590" y="396" width="350" height="40" rx="6" fill="#2493c0"/>
+  <text class="cell" x="604" y="420">all LFPS, spec-checked datapath</text>
+
+  <!-- SerDes -->
+  <text class="lbl" x="40" y="466">Transceiver</text>
+  <text class="sub" x="40" y="482">via LiteICLink</text>
+  <rect x="300" y="450" width="270" height="40" rx="6" fill="#2493c0"/>
+  <text class="cell" x="314" y="474">Artix7 GTP, Kintex7 GTX (ECP5)</text>
+  <rect x="590" y="450" width="350" height="40" rx="6" fill="#2493c0"/>
+  <text class="cell" x="604" y="474">GTP, GTX, GTY (10Gbps), Gowin GTR12</text>
+</svg>
