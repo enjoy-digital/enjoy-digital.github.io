@@ -234,6 +234,7 @@ will tell.
 Ternary-Bonsai-2 models (on Qwen's Qwen3 and Qwen3.5 architectures, with Gated DeltaNet) from
 their GGUF files, with PrismML's llama.cpp fork as the reference. openTPU's numbers are from its
 README. The code is on [GitHub](https://github.com/enjoy-digital/trixium), BSD-2-Clause. Previous
-parts: [the PCIe cards](/posts/trixium/) and [the Efinix Ti375](/posts/trixium-ti375/).*
+parts: [the PCIe cards](/posts/trixium/) and [the Efinix Ti375](/posts/trixium-ti375/). Thumbnail:
+PrismML's [Bonsai 2 announcement](https://prismml.com/news/bonsai-2-family) image.*
 
 *Work and ideas by Enjoy-Digital; written up with AI in the loop.*
