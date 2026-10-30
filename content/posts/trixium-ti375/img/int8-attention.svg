@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 400" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .t    { fill:#2EAADC; font-size:16px; font-weight:700; }
+      .s    { fill:#8e96a2; font-size:12px; }
+      .lbl  { fill:#e6e8e3; font-size:13px; font-weight:700; }
+      .val  { fill:#e6e8e3; font-size:12px; font-weight:700; }
+      .gain { fill:#67e8f9; font-size:12px; font-weight:700; }
+      .grid { stroke:#2a313b; stroke-width:1; }
+      .ax   { fill:#8e96a2; font-size:11px; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="980" height="400" fill="#0f1218"/>
+  <text class="t" x="40" y="36">Ternary-Bonsai-2 2B on the Ti375: decode speed against the context length</text>
+  <text class="s" x="40" y="56">tok/s, bench on the kit, FP32 attention (ti375_v23) against int8 attention (ti375_i8b)</text>
+
+  <!-- legend -->
+  <rect x="640" y="72" width="16" height="12" rx="3" fill="#5d6673"/>
+  <text class="s" x="662" y="83">FP32 K/V</text>
+  <rect x="760" y="72" width="16" height="12" rx="3" fill="#2493c0"/>
+  <text class="s" x="782" y="83">int8 K/V</text>
+
+  <!-- y: 0..16 tok/s over y=340..100 (15 px per tok/s) -->
+  <line class="grid" x1="90" y1="340" x2="940" y2="340"/>
+  <line class="grid" x1="90" y1="265" x2="940" y2="265"/>
+  <line class="grid" x1="90" y1="190" x2="940" y2="190"/>
+  <line class="grid" x1="90" y1="115" x2="940" y2="115"/>
+  <text class="ax" x="80" y="344" text-anchor="end">0</text>
+  <text class="ax" x="80" y="269" text-anchor="end">5</text>
+  <text class="ax" x="80" y="194" text-anchor="end">10</text>
+  <text class="ax" x="80" y="119" text-anchor="end">15</text>
+
+  <!-- 64 tokens: 14.32 / 14.42 -->
+  <rect x="140" y="125.2" width="70" height="214.8" rx="4" fill="#5d6673"/>
+  <rect x="214" y="123.7" width="70" height="216.3" rx="4" fill="#2493c0"/>
+  <text class="val" x="175" y="118" text-anchor="middle">14.32</text>
+  <text class="val" x="249" y="116" text-anchor="middle">14.42</text>
+  <text class="lbl" x="212" y="364" text-anchor="middle">64 tokens</text>
+  <text class="gain" x="212" y="382" text-anchor="middle">+0.7%</text>
+
+  <!-- 256 tokens: 13.96 / 14.59 -->
+  <rect x="345" y="130.6" width="70" height="209.4" rx="4" fill="#5d6673"/>
+  <rect x="419" y="121.2" width="70" height="218.8" rx="4" fill="#2493c0"/>
+  <text class="val" x="380" y="124" text-anchor="middle">13.96</text>
+  <text class="val" x="454" y="114" text-anchor="middle">14.59</text>
+  <text class="lbl" x="417" y="364" text-anchor="middle">256</text>
+  <text class="gain" x="417" y="382" text-anchor="middle">+4.5%</text>
+
+  <!-- 1024 tokens: 11.98 / 14.27 -->
+  <rect x="550" y="160.3" width="70" height="179.7" rx="4" fill="#5d6673"/>
+  <rect x="624" y="125.95" width="70" height="214.05" rx="4" fill="#2493c0"/>
+  <text class="val" x="585" y="153" text-anchor="middle">11.98</text>
+  <text class="val" x="659" y="119" text-anchor="middle">14.27</text>
+  <text class="lbl" x="622" y="364" text-anchor="middle">1,024</text>
+  <text class="gain" x="622" y="382" text-anchor="middle">+19%</text>
+
+  <!-- 2040 tokens: 10.05 / 13.81 -->
+  <rect x="755" y="189.25" width="70" height="150.75" rx="4" fill="#5d6673"/>
+  <rect x="829" y="132.85" width="70" height="207.15" rx="4" fill="#2493c0"/>
+  <text class="val" x="790" y="182" text-anchor="middle">10.05</text>
+  <text class="val" x="864" y="126" text-anchor="middle">13.81</text>
+  <text class="lbl" x="827" y="364" text-anchor="middle">2,040</text>
+  <text class="gain" x="827" y="382" text-anchor="middle">+37%</text>
+</svg>
