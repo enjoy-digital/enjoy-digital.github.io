@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 520" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .paper { fill:#171814; }
+      .t     { fill:#ffffff; font-size:15px; font-weight:700; }
+      .sub   { fill:#9aa09a; font-size:11px; }
+      .cyan  { fill:#2EAADC; font-size:13px; font-weight:700; }
+      .lbl   { fill:#cfd2cc; font-size:12px; }
+      .wire  { stroke:#2EAADC; stroke-width:2; fill:none; }
+      .arr   { stroke:#2EAADC; stroke-width:2; fill:none; marker-end:url(#a); marker-start:url(#b); }
+      .dash  { stroke:#22d3ee; stroke-width:2; fill:none; stroke-dasharray:5 4; marker-end:url(#a); marker-start:url(#b); }
+    </style>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2EAADC"/></marker>
+    <marker id="b" markerWidth="9" markerHeight="9" refX="2" refY="3" orient="auto"><path d="M7,0 L0,3 L7,6 Z" fill="#2EAADC"/></marker>
+  </defs>
+
+  <rect class="paper" x="0" y="0" width="920" height="520"/>
+  <text class="t" x="460" y="30" text-anchor="middle" fill="#2EAADC">Same tools, now typed: the agent calls functions, not terminals</text>
+
+  <!-- agent -->
+  <rect x="25" y="170" width="170" height="140" rx="12" fill="#102a33" stroke="#22d3ee" stroke-width="2.5"/>
+  <text class="cyan" x="110" y="222" text-anchor="middle">AI agent</text>
+  <text class="sub"  x="110" y="244" text-anchor="middle">Claude Code, Codex,</text>
+  <text class="sub"  x="110" y="261" text-anchor="middle">any MCP client</text>
+
+  <!-- MCP server -->
+  <rect x="245" y="60" width="270" height="400" rx="12" fill="#1e1f1b" stroke="#2EAADC" stroke-width="2.5"/>
+  <text class="cyan" x="380" y="86" text-anchor="middle">litex_mcp</text>
+  <text class="sub"  x="380" y="104" text-anchor="middle">in LiteX, stdio, 27 tools</text>
+  <g>
+    <rect x="257" y="118" width="246" height="40" rx="7" fill="#1a1b17" stroke="#2EAADC"/>
+    <text class="lbl" x="272" y="136">check · ident · connect</text>
+    <text class="sub" x="272" y="151">which SoC answers, latency</text>
+    <rect x="257" y="166" width="246" height="40" rx="7" fill="#1a1b17" stroke="#2EAADC"/>
+    <text class="lbl" x="272" y="184">registers · memory</text>
+    <text class="sub" x="272" y="199">by csr.csv name, writes opt-in</text>
+    <rect x="257" y="214" width="246" height="40" rx="7" fill="#1a1b17" stroke="#2EAADC"/>
+    <text class="lbl" x="272" y="232">console</text>
+    <text class="sub" x="272" y="247">BIOS commands, up to litex&gt;</text>
+    <rect x="257" y="262" width="246" height="40" rx="7" fill="#1a1b17" stroke="#2EAADC"/>
+    <text class="lbl" x="272" y="280">scope_list · scope_capture</text>
+    <text class="sub" x="272" y="295">LiteScope, capture as data + VCD</text>
+    <rect x="257" y="310" width="246" height="40" rx="7" fill="#1a1b17" stroke="#2EAADC"/>
+    <text class="lbl" x="272" y="328">build_start · build_report</text>
+    <text class="sub" x="272" y="343">timing/utilization as JSON</text>
+    <rect x="257" y="358" width="246" height="40" rx="7" fill="#1a1b17" stroke="#2EAADC"/>
+    <text class="lbl" x="272" y="376">sim/server_start · jobs</text>
+    <text class="sub" x="272" y="391">long runs in the background</text>
+    <rect x="257" y="406" width="246" height="40" rx="7" fill="#1a1b17" stroke="#2EAADC"/>
+    <text class="lbl" x="272" y="424">boards · cpus · cores</text>
+    <text class="sub" x="272" y="439">"which command line?"</text>
+  </g>
+
+  <!-- agent <-> mcp -->
+  <line class="arr" x1="195" y1="240" x2="245" y2="240"/>
+  <text class="sub" x="220" y="228" text-anchor="middle">JSON</text>
+
+  <!-- backends -->
+  <rect x="560" y="110" width="150" height="44" rx="8" fill="#1a1b17" stroke="#2EAADC"/>
+  <text class="lbl" x="635" y="137" text-anchor="middle">litex_server</text>
+  <rect x="560" y="240" width="150" height="44" rx="8" fill="#1a1b17" stroke="#2EAADC"/>
+  <text class="lbl" x="635" y="267" text-anchor="middle">litex_sim</text>
+  <rect x="560" y="340" width="150" height="44" rx="8" fill="#1a1b17" stroke="#2EAADC"/>
+  <text class="lbl" x="635" y="360" text-anchor="middle">toolchains</text>
+  <text class="sub" x="635" y="376" text-anchor="middle">Vivado, nextpnr...</text>
+
+  <line class="arr" x1="503" y1="185" x2="560" y2="132"/>
+  <line class="arr" x1="503" y1="282" x2="560" y2="262"/>
+  <line class="arr" x1="503" y1="330" x2="560" y2="360"/>
+
+  <!-- board -->
+  <rect x="760" y="80" width="140" height="110" rx="12" fill="#1e1f1b" stroke="#2EAADC" stroke-width="2.5"/>
+  <text class="cyan" x="830" y="122" text-anchor="middle">LiteX SoC</text>
+  <text class="sub"  x="830" y="142" text-anchor="middle">on the bench</text>
+  <text class="sub"  x="830" y="160" text-anchor="middle">UART/JTAG/Eth/PCIe</text>
+  <line class="arr" x1="710" y1="132" x2="760" y2="132"/>
+
+  <rect x="760" y="225" width="140" height="80" rx="12" fill="#1e1f1b" stroke="#2EAADC" stroke-width="2.5"/>
+  <text class="cyan" x="830" y="258" text-anchor="middle">Simulated SoC</text>
+  <text class="sub"  x="830" y="278" text-anchor="middle">Verilator, no sudo</text>
+  <line class="dash" x1="710" y1="262" x2="760" y2="262"/>
+
+  <text class="sub" x="460" y="495" text-anchor="middle">Read-only by default. Writes and BIOS commands need --allow-write. Flashing is never exposed.</text>
+</svg>

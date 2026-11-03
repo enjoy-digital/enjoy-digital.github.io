@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 470" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <style>
+      .paper { fill:#171814; }
+      .t     { fill:#2EAADC; font-size:15px; font-weight:700; }
+      .sub   { fill:#9aa09a; font-size:11px; }
+      .cyan  { fill:#2EAADC; font-size:13px; font-weight:700; }
+      .lbl   { fill:#cfd2cc; font-size:12px; }
+      .arr   { stroke:#2EAADC; stroke-width:2; fill:none; marker-end:url(#a); }
+      .dash  { stroke:#22d3ee; stroke-width:2; fill:none; stroke-dasharray:5 4; marker-end:url(#a); }
+    </style>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2EAADC"/></marker>
+  </defs>
+
+  <rect class="paper" x="0" y="0" width="920" height="470"/>
+  <text class="t" x="460" y="30" text-anchor="middle">Split the work: the planner keeps the machine, the operator gets the bench</text>
+
+  <!-- planner -->
+  <rect x="25" y="70" width="270" height="300" rx="12" fill="#102a33" stroke="#22d3ee" stroke-width="2.5"/>
+  <text class="cyan" x="160" y="100" text-anchor="middle">Planner agent</text>
+  <text class="sub"  x="160" y="118" text-anchor="middle">strongest model, source and files</text>
+  <text class="lbl" x="45" y="152">reads the RTL, the netlist,</text>
+  <text class="lbl" x="45" y="170">the datasheet, the firmware</text>
+  <text class="lbl" x="45" y="200">forms hypotheses</text>
+  <text class="lbl" x="45" y="230">edits the design and drivers</text>
+  <text class="lbl" x="45" y="260">rebuilds, decides</text>
+  <text class="sub" x="45" y="300">context: source and conclusions,</text>
+  <text class="sub" x="45" y="316">not register dumps</text>
+
+  <!-- requests -->
+  <line class="arr" x1="295" y1="170" x2="385" y2="170"/>
+  <text class="sub" x="340" y="158" text-anchor="middle">"DOUT for</text>
+  <text class="sub" x="340" y="190" text-anchor="middle">8 gains"</text>
+  <line class="dash" x1="385" y1="270" x2="295" y2="270"/>
+  <text class="sub" x="340" y="258" text-anchor="middle">a table,</text>
+  <text class="sub" x="340" y="290" text-anchor="middle">no opinions</text>
+
+  <!-- operator -->
+  <rect x="385" y="70" width="250" height="300" rx="12" fill="#1e1f1b" stroke="#2EAADC" stroke-width="2.5"/>
+  <text class="cyan" x="510" y="100" text-anchor="middle">Bench operator</text>
+  <text class="sub"  x="510" y="118" text-anchor="middle">cheaper model, litex_mcp only</text>
+  <text class="lbl" x="405" y="152">litex_check: right SoC?</text>
+  <text class="lbl" x="405" y="180">registers, memory</text>
+  <text class="lbl" x="405" y="208">console, reboot, boot log</text>
+  <text class="lbl" x="405" y="236">LiteScope captures</text>
+  <text class="lbl" x="405" y="264">sim and server jobs</text>
+  <text class="sub" x="405" y="300">no shell, no flash,</text>
+  <text class="sub" x="405" y="316">writes only if allowed</text>
+
+  <line class="arr" x1="635" y1="220" x2="705" y2="220"/>
+
+  <!-- bench -->
+  <rect x="705" y="110" width="190" height="90" rx="12" fill="#1e1f1b" stroke="#2EAADC" stroke-width="2.5"/>
+  <text class="cyan" x="800" y="148" text-anchor="middle">Board</text>
+  <text class="sub"  x="800" y="168" text-anchor="middle">via litex_server</text>
+  <rect x="705" y="240" width="190" height="90" rx="12" fill="#1e1f1b" stroke="#2EAADC" stroke-width="2.5"/>
+  <text class="cyan" x="800" y="278" text-anchor="middle">Simulated SoC</text>
+  <text class="sub"  x="800" y="298" text-anchor="middle">Verilator</text>
+
+  <text class="sub" x="460" y="420" text-anchor="middle">One planner can keep several operators busy, one per board or simulation,</text>
+  <text class="sub" x="460" y="438" text-anchor="middle">each one only able to do what its MCP server allows.</text>
+</svg>
