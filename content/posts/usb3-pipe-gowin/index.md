@@ -178,8 +178,8 @@ grow from 40 to 80 bits. The Gen 2 framing now processes 16 bytes per cycle. The
 gearbox and DC balance were restructured for few levels and low fanout: a one-hot block aligner
 pointer, decodes registered and shifted with the data window, data registers without reset. The
 first Gen 2 Tang builds ran at 41 MHz for the transceiver clocks. Today's build closes timing at
-125/62.5 MHz. The 10Gbps bring-up on the Tang is next
-([USB3-PIPE #154](https://github.com/enjoy-digital/usb3_pipe/pull/154)).
+125/62.5 MHz. The 10Gbps bring-up on the Tang is now done: see
+[USB3-PIPE at 10Gbps on Gowin](/posts/usb3-pipe-gowin-10g/).
 
 ## Try it
 
