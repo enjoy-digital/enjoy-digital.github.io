@@ -1,0 +1,11 @@
+{{ define "main" }}
+<section class="band">
+	<div class="wrap">
+		<p class="kicker">// taxonomy</p>
+		<h1>{{ .Title }}</h1>
+	</div>
+</section>
+<section class="wrap block">
+	<p class="chips big">{{ range .Data.Terms.Alphabetical }}<a href="{{ .Page.RelPermalink }}">#{{ .Page.Title | lower }}<small>{{ .Count }}</small></a>{{ end }}</p>
+</section>
+{{ end }}

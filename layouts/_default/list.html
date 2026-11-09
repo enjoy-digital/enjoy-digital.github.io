@@ -1,0 +1,17 @@
+{{ define "main" }}
+<section class="band">
+	<div class="wrap">
+		<p class="kicker">{{ if eq .Kind "term" }}// tag{{ else }}// {{ .Section | default "blog" }}{{ end }}</p>
+		<h1>{{ if eq .Kind "term" }}#{{ .Title | lower }}{{ else }}{{ .Title }}{{ end }}</h1>
+		{{ with .Content }}<div class="lead">{{ . }}</div>{{ end }}
+	</div>
+</section>
+<section class="wrap block">
+	{{- range .Pages.GroupByDate "2006" }}
+	<h2 class="year">{{ .Key }}</h2>
+	<div class="grid">
+		{{- range .Pages }}{{ partial "site/card.html" (dict "p" . "feat" false) }}{{ end }}
+	</div>
+	{{- end }}
+</section>
+{{ end }}

@@ -1,0 +1,22 @@
+{{ define "main" }}
+{{- $posts := where (where .Site.RegularPages "Section" "posts") "Draft" false -}}
+<section class="band band-home">
+	<div class="wrap">
+		<p class="kicker">// blog &middot; enjoy-digital</p>
+		<h1>LiteX <span>Notes.</span></h1>
+		<div class="lead">{{ .Content }}</div>
+	</div>
+</section>
+<section class="wrap block">
+	<div class="head-row"><h2>Latest</h2><a class="caps-link" href="{{ "posts/" | relURL }}">All {{ len $posts }} posts</a></div>
+	<div class="grid">
+		{{- range $i, $p := first 10 $posts }}
+		{{ partial "site/card.html" (dict "p" $p "feat" (eq $i 0)) }}
+		{{- end }}
+	</div>
+</section>
+<section class="wrap block tags-block">
+	<h2>Topics</h2>
+	<p class="chips">{{ range first 28 .Site.Taxonomies.tags.ByCount }}<a href="{{ .Page.RelPermalink }}">#{{ .Page.Title | lower }}<small>{{ .Count }}</small></a>{{ end }}</p>
+</section>
+{{ end }}

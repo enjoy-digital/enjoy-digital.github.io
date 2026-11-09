@@ -1,0 +1,14 @@
+{{- $site := "https://enjoy-digital.fr/" -}}
+<header class="top">
+	<a class="brand" href="{{ $site }}" aria-label="Enjoy-Digital website"><img src="{{ "img/site/enjoy_digital_gray.png" | relURL }}" alt="Enjoy-Digital" width="150" height="63"/></a>
+	<a class="blog-name" href="{{ "/" | relURL }}">blog</a>
+	<nav class="nav" aria-label="Blog">
+		<a href="{{ "posts/" | relURL }}"{{ if eq .Section "posts" }} aria-current="page"{{ end }}>posts</a>
+		<a href="{{ "tags/" | relURL }}"{{ if eq .Type "tags" }} aria-current="page"{{ end }}>tags</a>
+		<a href="{{ "about/" | relURL }}"{{ if eq .RelPermalink ("about/" | relURL) }} aria-current="page"{{ end }}>about</a>
+		<a href="https://github.com/enjoy-digital/litex">litex</a>
+		<a href="{{ $site }}">enjoy-digital.fr</a>
+		<a href="{{ "index.xml" | relURL }}">rss</a>
+	</nav>
+	<a class="nav-contact" href="{{ $site }}#contact">contact</a>
+</header>

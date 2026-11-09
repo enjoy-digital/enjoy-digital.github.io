@@ -1,0 +1,15 @@
+{{- /* Post card. Context: dict "p" page "feat" bool. */ -}}
+{{- $p := .p -}}
+<a class="card{{ if .feat }} feat{{ end }}" href="{{ $p.RelPermalink }}">
+	{{- with $p.Resources.GetMatch "featured*" }}
+		{{- $img := cond $.feat (.Fill "1000x625 Smart webp q82") (.Fill "720x450 Smart webp q80") }}
+		<img src="{{ $img.RelPermalink }}" alt="" width="{{ $img.Width }}" height="{{ $img.Height }}" loading="lazy"/>
+	{{- else }}
+		<span class="noimg" aria-hidden="true">{{ $p.Title | truncate 2 "" }}</span>
+	{{- end }}
+	<span class="card-body">
+		<span class="meta">{{ $p.Date.Format "2006-01-02" }}{{ with $p.Params.tags }} &middot; {{ delimit (first 3 .) " · " }}{{ end }}</span>
+		<b>{{ $p.Title }}</b>
+		<span class="d">{{ $p.Params.summary | default $p.Summary | plainify | truncate (cond .feat 260 150) }}</span>
+	</span>
+</a>

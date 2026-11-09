@@ -1,0 +1,33 @@
+{{ define "main" }}
+{{- $isPost := eq .Section "posts" -}}
+<section class="band band-post">
+	<div class="wrap">
+		{{ if $isPost }}<p class="kicker"><a href="{{ "posts/" | relURL }}">// posts</a>{{ with .Params.categories }} &middot; {{ index . 0 }}{{ end }}</p>{{ end }}
+		<h1>{{ .Title }}</h1>
+		{{ if $isPost }}
+		<p class="post-meta">
+			<time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
+			&middot; {{ .ReadingTime }} min read
+			{{ with .Params.author | default .Site.Params.author.name }}&middot; {{ . }}{{ end }}
+		</p>
+		{{ with .Params.tags }}<p class="chips dark">{{ range . }}<a href="{{ (printf "tags/%s/" (urlize .)) | relURL }}">#{{ . }}</a>{{ end }}</p>{{ end }}
+		{{ end }}
+	</div>
+</section>
+{{- $toc := and $isPost (gt (len .TableOfContents) 80) (ne .Params.showTableOfContents false) }}
+<div class="wrap post{{ if $toc }} has-toc{{ end }}">
+	<article class="prose">
+		{{- if and $isPost (ne .Params.showHero false) }}{{ with .Resources.GetMatch "featured*" }}{{ with .Resize "1200x webp q85" }}
+		<figure class="hero-img"><img src="{{ .RelPermalink }}" alt="" width="{{ .Width }}" height="{{ .Height }}"/></figure>
+		{{ end }}{{ end }}{{ end }}
+		{{ .Content }}
+	</article>
+	{{ if $toc }}<aside class="toc"><p class="caps">Contents</p>{{ .TableOfContents }}</aside>{{ end }}
+</div>
+{{ if $isPost }}
+<nav class="wrap pager" aria-label="More posts">
+	{{ with .NextInSection }}<a class="prev" href="{{ .RelPermalink }}"><span class="meta">&larr; newer</span>{{ .Title }}</a>{{ else }}<span></span>{{ end }}
+	{{ with .PrevInSection }}<a class="next" href="{{ .RelPermalink }}"><span class="meta">older &rarr;</span>{{ .Title }}</a>{{ end }}
+</nav>
+{{ end }}
+{{ end }}

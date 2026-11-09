@@ -1,0 +1,31 @@
+{{- $site := "https://enjoy-digital.fr/" -}}
+<section class="contact">
+	<div class="wrap contact-inner">
+		<div>
+			<h2>Have an FPGA project in mind?</h2>
+			<p>We design FPGA systems for clients, from gateware and drivers to complete boards.</p>
+		</div>
+		<a class="button button-big" href="{{ $site }}#contact">Contact us</a>
+	</div>
+</section>
+<footer class="foot">
+	<div class="wrap foot-cols">
+		<div>
+			<img src="{{ "img/site/enjoy_digital.png" | relURL }}" alt="Enjoy-Digital" width="160" height="68"/>
+			<p>FPGA design services and the LiteX ecosystem, since 2011.</p>
+		</div>
+		<div>
+			<h4>Blog</h4>
+			<a href="{{ "posts/" | relURL }}">All posts</a><a href="{{ "tags/" | relURL }}">Tags</a><a href="{{ "about/" | relURL }}">About</a><a href="{{ "index.xml" | relURL }}">RSS</a>
+		</div>
+		<div>
+			<h4>Enjoy-Digital</h4>
+			<a href="{{ $site }}">Website</a><a href="{{ $site }}#services">Design services</a><a href="https://enjoy-digital-shop.myshopify.com">Shop</a><a href="{{ $site }}#contact">Contact</a>
+		</div>
+		<div>
+			<h4>Open source</h4>
+			<a href="https://github.com/enjoy-digital/litex">LiteX</a><a href="https://github.com/enjoy-digital">GitHub</a><a href="https://discord.gg/jjL4MpAd">Discord</a>
+		</div>
+	</div>
+	<div class="wrap legal">&copy; 2011&ndash;{{ now.Year }} Enjoy-Digital &middot; {{ .Site.Params.copyright | default "" }}</div>
+</footer>
