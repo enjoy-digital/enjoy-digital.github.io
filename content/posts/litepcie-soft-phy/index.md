@@ -131,10 +131,23 @@ On the Kintex UltraScale+ GTY (XCKU3P), the soft PHY trains at 2.5 GT/s, and the
 received 23.8 Gb/s of DMA data and checked it: 1.78M buffers in 5 seconds, none wrong. Retrain Link
 from 2.5 or 5 GT/s back to 8 GT/s worked 60 times out of 60.
 
-None of these numbers is a maximum. We have not tried to optimize the throughput yet: the goal of this
-first version was a link that trains, enumerates and moves data reliably at every speed and width.
-At 8 GT/s x8, 23.8 Gb/s is well below the 63 Gb/s the link can carry, and at 5 GT/s x8 we have not
-identified what limits it to about 18 Gb/s. Finding and removing these limits comes next.
+The goal of this first version was a link that trains, enumerates and moves data reliably at every
+speed and width, not throughput: 23.8 Gb/s is well below the 63 Gb/s the link can carry.
+
+*Update, November 17:* a first round of throughput work is merged (no idle cycle between received
+TLPs, the next packet prepared in the replay buffer, a receive path sized for bursts of completions).
+On the same card and host, with 32 read requests in flight in the DMA of the soft PHY design, and
+the LiteX-Boards target at a 200 MHz system clock for the hard block:
+
+| XCKU3P, 8 GT/s x8, DMA data checked | Soft PHY | Hard IP |
+|---|---:|---:|
+| Loopback (host to FPGA and back) | 31 Gb/s | 33.8 Gb/s |
+| Host to FPGA only | 34.2 Gb/s | |
+| FPGA to host only | 41.7 Gb/s | |
+
+A 15-minute loopback soak moved 430M buffers with none wrong. In loopback, the soft PHY is now within
+10% of the hard block, and the host limits the host to FPGA direction. None of these numbers is a
+maximum yet, and at 5 GT/s x8 we have not identified what limits the soft PHY to about 18 Gb/s.
 
 ## Gen3 x8 and the XCKU3P
 
@@ -153,6 +166,7 @@ the width on 8 GT/s capable links.
 | Soft PHY Gen3 x8, first build | 202K (synthesis) | did not fit | | |
 | Soft PHY Gen3 x8, after the first area changes | 111,153 (68%) | 78% | | |
 | Soft PHY Gen3 x8, current | 82,434 (51%) | 57% | 69,610 (21%) | 57 (16%) |
+| Soft PHY Gen3 x8, with 32 read requests in flight (the November 17 rates) | 107,874 (66%) | 74% | 84,382 (26%) | 65 (18%) |
 | Hard IP Gen3 x8 (`PCIE40E4`), LitePCIe endpoint from the LiteX-Boards target | 13,213 (8%) | 11% | 17,287 (5%) | 45.5 (13%) |
 
 The device view at the top of this post shows what that means. It is drawn from the placed designs:
