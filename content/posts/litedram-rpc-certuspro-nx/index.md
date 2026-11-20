@@ -2,8 +2,8 @@
 title: "RPC DRAM on Lattice CertusPro-NX with LiteDRAM"
 date: 2026-11-20T09:00:00+01:00
 draft: false
-description: "LiteDRAM now has an RPC DRAM PHY for Lattice CertusPro-NX, validated on the CertusPro-NX VVML board designed by tinyVision.ai. It builds on the RPC PHY Antmicro wrote for Xilinx 7-Series in 2021, adds a Nexus backend that captures reads with the DQS of the DRAM, the controller changes this memory needs, and Address Streaming. The Etron EM6GA16L runs at 800MT/s and the BIST reaches 1315 MiB/s, 86% of the bus."
-summary: "An RPC DRAM PHY for CertusPro-NX in LiteDRAM: what RPC DRAM is, Antmicro's 2021 PHY as the starting point, the Nexus backend and its clocking, what the bring-up on the VVML board found, and Address Streaming, from 356 to 1315 MiB/s."
+description: "LiteDRAM now has an RPC DRAM PHY for Lattice CertusPro-NX, validated on the CertusPro-NX VVML board designed by tinyVision.ai. It builds on the RPC PHY Antmicro wrote for Xilinx 7-Series in 2021, adds a Nexus backend that captures reads with the DQS of the DRAM, the controller changes this memory needs, Address Streaming and support for the two DRAMs of the board. The Etron EM6GA16L chips run at 800MT/s, give 64 MiB, and the BIST reaches about 1280 MiB/s, 84% of the bus."
+summary: "An RPC DRAM PHY for CertusPro-NX in LiteDRAM: what RPC DRAM is, Antmicro's 2021 PHY as the starting point, the Nexus backend and its clocking, what the bring-up on the VVML board found, Address Streaming, from 356 to about 1300 MiB/s, and the two DRAMs of the board on one bus."
 tags: ["litex", "fpga", "litedram", "rpc-dram", "etron", "lattice", "certuspro-nx", "nexus", "tinyvision", "antmicro"]
 categories: ["hardware"]
 showHero: false
@@ -13,9 +13,10 @@ showHero: false
 Etron's RPC DRAM on Lattice CertusPro-NX. It is validated on the CertusPro-NX Voice and Vision
 Machine Learning (VVML) board designed by [tinyVision.ai](https://tinyvision.ai): the BIOS memory
 test passes from sys_clk 50MHz to 100MHz (800MT/s at the pins), and the BIST of LiteDRAM writes and
-reads at about 1315 MiB/s with Address Streaming, 86% of what the bus can carry. The base of the
-PHY is the RPC DRAM work Antmicro did on Xilinx 7-Series in 2021. We ported it to the Nexus IO
-primitives and extended the controller for what this memory expects.*
+reads at about 1280 MiB/s with Address Streaming, 84% of what the bus can carry. Both DRAMs of the
+board are used, for 64 MiB. The base of the PHY is the RPC DRAM work Antmicro did on Xilinx
+7-Series in 2021. We ported it to the Nexus IO primitives and extended the controller for what
+this memory expects.*
 
 {{< figure src="img/vvml-board.jpg" alt="Hand holding a black CertusPro-NX Voice and Vision Machine Learning board, LEDs on, with the CertusPro-NX FPGA in the center and two EtronTech EM6GA16LBXA-12H RPC DRAM chips right below it" caption="The CertusPro-NX VVML board (LFCPNX-VVML-EVN). The two EtronTech EM6GA16LBXA-12H chips under the FPGA are the RPC DRAMs." >}}
 
@@ -130,7 +131,9 @@ driven, and several of them are in the controller, not in the PHY.
 **Refresh is a burst, not a tick.** The module description used DDR3-like values: a refresh every
 7.8µs. An RPC DRAM refresh command refreshes all the rows of the selected banks, 100ns per row,
 and the DRAM accepts nothing until it is done. With the DDR3 values the DRAM was permanently busy
-and ignored the commands. The module now refreshes the 4 banks in one burst of 1.64ms every 32ms.
+and ignored the commands. The module now refreshes the 4 banks in one burst every 32ms. The burst
+lasts 1.64ms nominally; the time the controller waits for it was increased later, for a reason
+that only appeared with two DRAMs (see below).
 
 **One Request Packet at a time.** LiteDRAM's multiplexer can place an activate or a precharge on
 one phase while a read or a write goes on another. RPC DRAM takes a single command stream: each
@@ -173,8 +176,8 @@ that.
 
 ## Results
 
-The BIOS memory test passes on the first DRAM of the board from sys_clk 50MHz to 100MHz, with the
-same settings, and Radiant meets timing:
+The first results are with one DRAM of the board. The BIOS memory test passes from sys_clk 50MHz to
+100MHz, with the same settings, and Radiant meets timing:
 
 | sys_clk | CLK | Rate | Memspeed write | Memspeed read |
 |---|---|---|---|---|
@@ -231,7 +234,7 @@ Same bitstream at sys_clk 100MHz, streaming switched with a CSR of the controlle
 | off | on | 1318 MiB/s | 355 MiB/s |
 | on | on | 1315 MiB/s | 1313 MiB/s |
 
-{{< figure src="img/throughput.svg" alt="Bar chart of write and read throughput in MiB/s at sys_clk 100MHz. BIOS memspeed through the CPU: 33.9 write, 50.7 read. BIST with one Request Packet per WORD: 356 write, 356 read. BIST with Address Streaming: 1315 write, 1313 read. A dashed line marks the capacity of the DB bus at 800MT/s, 1526 MiB/s." caption="Measured on the VVML board. With streaming the BIST runs at 86% of the bus." >}}
+{{< figure src="img/throughput.svg" alt="Bar chart of write and read throughput in MiB/s at sys_clk 100MHz. BIOS memspeed through the CPU: 33.9 write, 50.7 read. BIST with one Request Packet per WORD: 356 write, 356 read. BIST with Address Streaming: 1315 write, 1313 read. A dashed line marks the capacity of the DB bus at 800MT/s, 1526 MiB/s." caption="Measured on the VVML board with one DRAM, before the refresh change described in the next section. With streaming the BIST runs at 86% of the bus." >}}
 
 That is 3.7 times faster, with 97.6 GiB tested without error with both directions on. The BIOS
 memory test and `mem_test` also pass in that configuration.
@@ -243,13 +246,42 @@ arbitrary user port with byte enables. Read streaming is on by default, write st
 and both are settings of the controller (`read_streaming`, `write_streaming`) that the `streaming`
 CSR can change at run time.
 
+## Two DRAMs on one bus
+
+The board has two EM6GA16L. They share `CLK`, `DQS` and `DB`, and each one has its own `STB` and
+`CS#`: what DDR3 calls ranks, and what the RPC DRAM datasheet calls Multi Rank. The PHY now takes a
+`nranks` parameter, and with `--rpc-ranks 2` on the target the BIOS reports 64 MiB.
+
+`CS#` selects the DRAM that takes a command, and it also enables its termination, so it is only
+low on the DRAM of the current command. When the controller moves to the other DRAM, the PHY
+lowers its `CS#` with the `STB` preamble and raises the `CS#` of the previous one a sys_clk cycle
+later. A stream stays in one DRAM: the multiplexer ends it when the rank changes. Refresh,
+precharge and the initialization commands go to both DRAMs at once. The read leveling is done on
+the first DRAM. The window of the second one is one delay step later, well inside the margin.
+
+Sharing the bus exposed two things that a single DRAM had hidden.
+
+**A refresh ends when the DRAM says so.** The refresh burst is timed by the DRAM itself, 100ns per
+row, with no tolerance in the datasheet, and the DRAM drives `DQS` high until it is done. With the
+controller waiting the nominal 1.64ms plus 2µs, about 1 read in 10000 of the first DRAM had a
+wrong bit in its first data: the second DRAM was still driving `DQS` at the end of its refresh.
+The controller now waits 1.5 times the nominal duration, 2.46ms every 32ms.
+
+**An unused DRAM still has to be reset.** With two DRAMs on the board and only one used, the other
+one was left alone. Once configured by an earlier bitstream, it keeps its state when the FPGA is
+loaded again, and the read leveling of the first DRAM then failed completely. The PHY now sends
+the reset sequence to every DRAM on the bus and keeps the `CS#` of the unused ones high afterwards.
+
+The longer refresh costs a little throughput: with the same test as above, the BIST gives
+1281 MiB/s in write and 1278 MiB/s in read, 84% of the bus, with one DRAM or two. With both DRAMs
+at sys_clk 100MHz, the BIOS memory test and `mem_test` over the 64 MiB pass after each of 6
+bitstream loads, and the BIST ran 73 GiB at random addresses without error.
+
 ## Limits and next steps
 
 - **900MT/s does not pass.** sys_clk 112.5MHz (`CLK` 450MHz) meets timing, but reads have rare bit
   errors on the lower byte and no read window on the upper byte. 125MHz does not meet timing in
   the SoC.
-- **One DRAM of two.** Only the first EM6GA16L is used. `STB` and `CS#` of the second one are held
-  high.
 - **4 DFI phases.** A burst spans two controller cycles. With 8 phases it would fit in one, which
   would simplify the base PHY. It is the main item of the rewrite list in the README of the PHY.
 - **More serial commands.** Serial activate and precharge, and Toggle RW, would keep a stream
@@ -259,8 +291,9 @@ CSR can change at run time.
 ## Try it
 
 ```sh
-# LiteX SoC on the CertusPro-NX VVML board with the RPC DRAM as main RAM and the BIST (Radiant).
-python3 -m litex_boards.targets.lattice_certuspro_nx_vvml --with-rpcdram --with-bist \
+# LiteX SoC on the CertusPro-NX VVML board with the two RPC DRAMs as main RAM (64MiB) and the
+# BIST (Radiant).
+python3 -m litex_boards.targets.lattice_certuspro_nx_vvml --with-rpcdram --rpc-ranks 2 --with-bist \
     --csr-csv csr.csv --build --load
 litex_term /dev/ttyUSBX
 
@@ -275,15 +308,18 @@ litex> sdram_bist 4096 1
 # No board: BIOS memory test and BIST against the RPC DRAM model in Verilator.
 python3 litedram/phy/rpc/simsoc.py
 python3 litedram/phy/rpc/simsoc.py --bist-length 16384 --stream-writes
+python3 litedram/phy/rpc/simsoc.py --nranks 2 --bist-length 32768 --stream-writes
 ```
 
 The work is merged: LiteDRAM [#507](https://github.com/enjoy-digital/litedram/pull/507) (Nexus
 backend, DRAM model, controller changes),
 [#508](https://github.com/enjoy-digital/litedram/pull/508) to
 [#512](https://github.com/enjoy-digital/litedram/pull/512) (bench scripts, frequency, resets,
-delays) and [#514](https://github.com/enjoy-digital/litedram/pull/514) (Address Streaming), and
+delays), [#514](https://github.com/enjoy-digital/litedram/pull/514) (Address Streaming) and
+[#516](https://github.com/enjoy-digital/litedram/pull/516) (two DRAMs), and
 LiteX-Boards [#966](https://github.com/litex-hub/litex-boards/pull/966) to
-[#968](https://github.com/litex-hub/litex-boards/pull/968) for the target. The details are in the
+[#968](https://github.com/litex-hub/litex-boards/pull/968) and
+[#971](https://github.com/litex-hub/litex-boards/pull/971) for the target. The details are in the
 [README of the PHY](https://github.com/enjoy-digital/litedram/blob/master/litedram/phy/rpc/README.md).
 
 ---
